@@ -17,20 +17,53 @@ class Window(QWidget):
 
 
     def initUI(self):
-        self.setGeometry(100,100,1700,500)
+        self.setGeometry(100,100,1200,500)
         self.setWindowFlags(Qt.FramelessWindowHint)
+        #창 마우스로 이동
+        self.oPos = self.pos()
 
         mainbox = QVBoxLayout()
-        titlebox = QHBoxLayout()
 
         #타이틀바
+        titlebox = QHBoxLayout()
         peachImage = QLabel(self)
         pixmap = QPixmap(self.imageDir+'peachpeachlogo.png')
         pixmap = pixmap.scaled(100, 100, Qt.KeepAspectRatio)
         peachImage.setPixmap(pixmap)
+        peachImage.setStyleSheet('''
+        background-color: #00ff0000;
+        border-style: inset;
+        border-width: 2px;
+        border-radius: 10px;
+        border-color: white;
+        ''')
         minimizeButton = QPushButton("―")
         maximizeButton = QPushButton("□")
         closeButton = QPushButton("X")
+        minimizeButton.setFixedSize(25, 25)
+        maximizeButton.setFixedSize(25, 25)
+        closeButton.setFixedSize(25, 25)
+        minimizeButton.setStyleSheet('''
+        background-color: #00ff0000;
+        border-style: inset;
+        border-width: 2px;
+        border-radius: 10px;
+        border-color: black;
+        ''')
+        maximizeButton.setStyleSheet('''
+        background-color: #00ff0000;
+        border-style: inset;
+        border-width: 2px;
+        border-radius: 10px;
+        border-color: black;
+        ''')
+        closeButton.setStyleSheet('''
+        background-color: #00ff0000;
+        border-style: inset;
+        border-width: 2px;
+        border-radius: 10px;
+        border-color: black;
+        ''')
         closeButton.clicked.connect(QCoreApplication.instance().quit)
         
         titlebox.addWidget(peachImage)
@@ -56,7 +89,10 @@ class Window(QWidget):
         #슬라이더
         playSlider = QSlider()
         playSlider.setOrientation(Qt.Horizontal)
-        playSlider.setStyleSheet(self.stylesheet())
+        playSlider.setMinimum(0)
+        playSlider.setMaximum(100)
+        playSlider.setValue(0)
+        # playSlider.setStyleSheet(self.stylesheet())
 
         vbox1.addWidget(musicImage)
         vbox1.addWidget(playSlider)
@@ -71,13 +107,43 @@ class Window(QWidget):
         self.pausePlayButton = QPushButton("",self)
         self.pausePlayButton.setText("▶")
 
+        prevSongButton.setStyleSheet('''
+        background-color: #00ff0000;
+        border-style: inset;
+        border-width: 2px;
+        border-radius: 10px;
+        border-color: black;
+        ''')
+        nextSongButton.setStyleSheet('''
+        background-color: #00ff0000;
+        border-style: inset;
+        border-width: 2px;
+        border-radius: 10px;
+        border-color: black;
+        ''')
+        self.pausePlayButton.setStyleSheet('''
+        background-color: #00ff0000;
+        border-style: inset;
+        border-width: 2px;
+        border-radius: 10px;
+        border-color: black;
+        ''')
+
+        prevSongButton.setFixedSize(199, 110)
+        nextSongButton.setFixedSize(199, 110)
+        self.pausePlayButton.setFixedSize(199, 110)
+
         self.pausePlayButton.setCheckable(True)
 
         self.pausePlayButton.toggled.connect(self.changeimage)
 
+        hbox3.addStretch(1)
         hbox3.addWidget(prevSongButton)
+        hbox3.addStretch(1)
         hbox3.addWidget(self.pausePlayButton)
+        hbox3.addStretch(1)
         hbox3.addWidget(nextSongButton)
+        hbox3.addStretch(1)
 
         hbox2.addLayout(hbox3)
         vbox1.addLayout(hbox2)
@@ -99,8 +165,9 @@ class Window(QWidget):
         self.volumeValue.setText(str(self.volumeSlider.value()))
 
         vbox2.addWidget(self.volumeSlider)
-        hvolumeValue.addSpacing(69)
+        hvolumeValue.addStretch(1)
         hvolumeValue.addWidget(self.volumeValue)
+        hvolumeValue.addStretch(1)
 
         vbox2.addLayout(hvolumeValue)
 
@@ -119,6 +186,8 @@ class Window(QWidget):
         vbox3.addWidget(speedCombobox)
 
         settingButton = QPushButton()
+        settingButton.setFixedSize(30, 30)
+        settingButton.setStyleSheet('background-color: #00ff0000')
         settingButton.setIcon(QIcon(self.imageDir+'gear.png'))
         #추후에 수정하기
 
@@ -157,10 +226,24 @@ class Window(QWidget):
         #메인 설정
         self.setLayout(mainbox)
 
+    #창 마우스로 이동
+    #개선해야할점 타이틀 쪽에만 마우스를 가져갔을때 움직이도록 창의 현재 좌표랑 마우스의 현재 좌표 이용하면 가능할지도
+
+    def mousePressEvent(self, event):
+        self.oPos = event.globalPos()
+
+    def mouseMoveEvent(self, QMouseEvent):
+        delta = QPoint(QMouseEvent.globalPos() - self.oPos)
+        self.move(self.x() + delta.x(), self.y() + delta.y())
+        self.oPos = QMouseEvent.globalPos()
+
+
     def expandWindow1(self):
         if self.isExpanded:
             self.boxdelete(self.hbox1,self.vbox5)
+            self.setGeometry(self.pos().x(), self.pos().y(), 1200, 500)
         else:
+            self.setGeometry(self.pos().x(), self.pos().y(), 1573, 500)
             self.vbox5 = subWindow().sub1()
             self.hbox1.addLayout(self.vbox5)
 
@@ -238,6 +321,7 @@ class subWindow:
         hbox7 = QHBoxLayout()
         searchInput = QLineEdit()
         searchButton = QPushButton()
+        searchButton.setFixedSize(30, 30)
         searchButton.setIcon(QIcon(self.imageDir+'magnifying-glass.png'))
 
         hbox7.addStretch(1)
