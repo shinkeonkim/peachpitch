@@ -34,7 +34,7 @@ class Window(QWidget):
         closeButton.clicked.connect(QCoreApplication.instance().quit)
         
         titlebox.addWidget(peachImage)
-        titlebox.addSpacing(800)
+        titlebox.addStretch(1)
         titlebox.addWidget(minimizeButton)
         titlebox.addWidget(maximizeButton)
         titlebox.addWidget(closeButton)
@@ -142,7 +142,7 @@ class Window(QWidget):
         menuButton = QPushButton()
         menuButton.setIcon(QIcon(self.imageDir+'plusbutton.png'))
         menuButton.clicked.connect(self.expandWindow1)
-        hbox6.addSpacing(500)
+        hbox6.addStretch(1)
         hbox6.addWidget(menuButton)
 
         vbox4.addLayout(hbox6)
