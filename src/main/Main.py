@@ -1,4 +1,6 @@
 import sys
+import sip
+import copy
 from PyQt5.QtWidgets import * 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -6,8 +8,13 @@ from PyQt5.QtGui import *
 class Window(QWidget):
     def __init__(self):
         super().__init__()
-        self.imageDir = "../../img/"
+        self.initVariable()
         self.initUI()
+
+    def initVariable(self):
+        self.imageDir = "../../img/"
+        self.isExpanded = False
+
 
     def initUI(self):
         self.setGeometry(100,100,1700,500)
@@ -34,8 +41,8 @@ class Window(QWidget):
 
         mainbox.addLayout(titlebox)
         
-        #재생과 리스트를 구분지을 수 있는 vbox넣기 위한 hbox1
-        hbox1 = QHBoxLayout()
+        #재생과 리스트를 구분지을 수 있는 vbox넣기 위한 self.hbox1
+        self.hbox1 = QHBoxLayout()
         
         #이미지랑 재생 버튼 있는 vbox1
         vbox1 = QVBoxLayout()
@@ -134,58 +141,30 @@ class Window(QWidget):
         hbox6 = QHBoxLayout()
         menuButton = QPushButton()
         menuButton.setIcon(QIcon(self.imageDir+'plusbutton.png'))
-
+        menuButton.clicked.connect(self.expandWindow1)
         hbox6.addSpacing(500)
         hbox6.addWidget(menuButton)
 
         vbox4.addLayout(hbox6)
+        self.vbox5 = subWindow().sub1()
 
-        #확장 됬을때 vbox5
-        vbox5 = QVBoxLayout()
-
-        #검색 hbox7
-        hbox7 = QHBoxLayout()
-        searchInput = QLineEdit()
-        searchButton = QPushButton()
-        searchButton.setIcon(QIcon(self.imageDir+'magnifying-glass.png'))
-
-        hbox7.addStretch(1)
-        hbox7.addWidget(searchInput)
-        hbox7.addWidget(searchButton)
-        hbox7.addStretch(1)
-
-        vbox5.addLayout(hbox7)
-
-        #탭뷰
-        tabs = QTabWidget()
-        playListTab = QWidget()
-        rankListTab = QWidget()
-        myFileTab = QWidget()
-
-        tabs.addTab(playListTab, "재생 목록")
-        tabs.addTab(rankListTab, "랭킹")
-        tabs.addTab(myFileTab, "내 파일")
-
-        vbox5.addWidget(tabs)
-
-
-
-
-
-
-
-
-
-
-        hbox1.addLayout(vbox1)
-        hbox1.addLayout(vbox4)
-        hbox1.addLayout(vbox5)
-        mainbox.addLayout(hbox1)
+        self.hbox1.addLayout(vbox1)
+        self.hbox1.addLayout(vbox4)
+        mainbox.addLayout(self.hbox1)
 
 
 
         #메인 설정
         self.setLayout(mainbox)
+
+    def expandWindow1(self):
+        if self.isExpanded:
+            self.boxdelete(self.hbox1,self.vbox5)
+        else:
+            self.vbox5 = subWindow().sub1()
+            self.hbox1.addLayout(self.vbox5)
+
+        self.isExpanded = not self.isExpanded    
 
     def sliderMoved(self):
         self.volumeValue.setText(str(self.volumeSlider.value()))
@@ -193,6 +172,24 @@ class Window(QWidget):
     def changeimage(self, pressed):
 
         self.pausePlayButton.setText({True: "❚❚", False: "▶"}[pressed])
+
+    def deleteItemsOfLayout(self, layout):
+        if layout is not None:
+            while layout.count():
+                item = layout.takeAt(0)
+                widget = item.widget()
+                if widget is not None:
+                    widget.setParent(None)
+                else:
+                    self.deleteItemsOfLayout(item.layout())
+
+    def boxdelete(self, layout, box):
+        for i in range(layout.count()):
+            layout_item = layout.itemAt(i)
+            if layout_item.layout() == box:
+                self.deleteItemsOfLayout(layout_item.layout())
+                layout.removeItem(layout_item)
+                break
 
     #slider bar design
     def stylesheet(self):
@@ -224,6 +221,45 @@ class Window(QWidget):
                 border-radius: 0px;
             }
         """
+
+class subWindow:
+
+    def __init__(self):
+        self.initVariable()
+
+    def initVariable(self):
+        self.imageDir = "../../img/"
+
+    def sub1(self):
+        #확장 됬을때 self.vbox5
+        self.vbox5 = QVBoxLayout()
+
+        #검색 hbox7
+        hbox7 = QHBoxLayout()
+        searchInput = QLineEdit()
+        searchButton = QPushButton()
+        searchButton.setIcon(QIcon(self.imageDir+'magnifying-glass.png'))
+
+        hbox7.addStretch(1)
+        hbox7.addWidget(searchInput)
+        hbox7.addWidget(searchButton)
+        hbox7.addStretch(1)
+
+        self.vbox5.addLayout(hbox7)
+
+        #탭뷰
+        tabs = QTabWidget()
+        playListTab = QWidget()
+        rankListTab = QWidget()
+        myFileTab = QWidget()
+
+        tabs.addTab(playListTab, "재생 목록")
+        tabs.addTab(rankListTab, "랭킹")
+        tabs.addTab(myFileTab, "내 파일")
+
+        self.vbox5.addWidget(tabs)
+
+        return self.vbox5
 
 
 
