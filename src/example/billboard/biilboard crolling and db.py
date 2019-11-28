@@ -5,7 +5,7 @@ conn = sqlite3.connect('music_database.db')
 c = conn.cursor()
 """
 c.execute('''
-CREATE TABLE chart_billboard (id INTEGER PRIMARY_KEY NOT NULL, title TEXT, artist TEXT)
+CREATE TABLE chart_billboard (id INTEGER PRIMARY_KEY NOT NULL, title TEXT, artist TEXT, youtube_link TEXT, created_at DATETIME)
 ''')
 """
 # chart들
@@ -25,7 +25,7 @@ c.execute('''DELETE FROM chart_billboard''')
 cnt = 0
 for i in chart_list:
     cnt+=1
-    c.execute('''INSERT INTO chart_billboard VALUES (?,?,?);''',(cnt,i[0],i[1]))
+    c.execute('''INSERT INTO chart_billboard VALUES (?,?,?,?,DATETIME(\'NOW\'));''',(cnt,i[0],i[1],""))
 
 # Save (commit) the changes
 conn.commit()
