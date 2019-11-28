@@ -19,8 +19,6 @@ class Window(QWidget):
     def initUI(self):
         self.setGeometry(100,100,1200,500)
         self.setWindowFlags(Qt.FramelessWindowHint)
-        #창 마우스로 이동
-        self.oPos = self.pos()
 
         mainbox = QVBoxLayout()
 
@@ -90,7 +88,7 @@ class Window(QWidget):
         playSlider = QSlider()
         playSlider.setOrientation(Qt.Horizontal)
         playSlider.setMinimum(0)
-        playSlider.setMaximum(100)
+        playSlider.setMaximum(1000)
         playSlider.setValue(0)
         # playSlider.setStyleSheet(self.stylesheet())
 
@@ -180,6 +178,10 @@ class Window(QWidget):
 
         speedList = ["X 1.0", "X 0.25", "X 0.5", "X 0.75", "X 1.25", "X 1.5", "X 1.75", "X 2.0"]
         speedCombobox = QComboBox()
+        speedCombobox.setStyleSheet('''
+        border: 2px solid black;
+        selection-background-color: lightgray;
+        ''')
         for i in speedList:
             speedCombobox.addItem(i)
 
@@ -201,6 +203,13 @@ class Window(QWidget):
 
         currentMusicList = QListWidget()
         currentMusicList.move(0,0)
+        currentMusicList.setStyleSheet('''
+        background-color: #00ff0000;
+        border-style: inset;
+        border-width: 2px;
+        border-radius: 10px;
+        border-color: black;
+        ''')
 
         hbox5.addWidget(currentMusicList)
 
@@ -226,16 +235,17 @@ class Window(QWidget):
         #메인 설정
         self.setLayout(mainbox)
 
-    #창 마우스로 이동
-    #개선해야할점 타이틀 쪽에만 마우스를 가져갔을때 움직이도록 창의 현재 좌표랑 마우스의 현재 좌표 이용하면 가능할지도
-
+    # 창을 옮긴다.
     def mousePressEvent(self, event):
-        self.oPos = event.globalPos()
+        if event.buttons() == Qt.LeftButton and (event.globalY() - self.pos().y() <= 60):
+            self.dragPos = event.globalPos()
+            event.accept()
 
-    def mouseMoveEvent(self, QMouseEvent):
-        delta = QPoint(QMouseEvent.globalPos() - self.oPos)
-        self.move(self.x() + delta.x(), self.y() + delta.y())
-        self.oPos = QMouseEvent.globalPos()
+    def mouseMoveEvent(self, event):
+        if event.buttons() == Qt.LeftButton and (event.globalY() - self.pos().y() <= 60):
+            self.move(self.pos() + event.globalPos() - self.dragPos)
+            self.dragPos = event.globalPos()
+            event.accept()
 
 
     def expandWindow1(self):
