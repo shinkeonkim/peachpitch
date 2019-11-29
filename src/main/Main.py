@@ -19,36 +19,30 @@ class Window(QWidget):
     def initUI(self):
         self.setGeometry(100,100,1200,500)
         self.setWindowFlags(Qt.FramelessWindowHint)
+        self.setStyleSheet("* {background: qlineargradient(spread:pad, x1:0 y1:0, x2:1 y2:0, stop:0 #AA99FF, stop:1 #8BC6E8, stop:2 #99F4FF);"
+                       "color: qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 black);}");
 
         mainbox = QVBoxLayout()
 
         #타이틀바
         titlebox = QHBoxLayout()
         peachImage = QLabel(self)
-        pixmap = QPixmap(self.imageDir+'peachpeachlogo.png')
-        pixmap = pixmap.scaled(100, 100, Qt.KeepAspectRatio)
+        pixmap = QPixmap(self.imageDir+'peach.png')
+        pixmap = pixmap.scaled(130, 130, Qt.KeepAspectRatio)
         peachImage.setPixmap(pixmap)
         peachImage.setStyleSheet('''
         background-color: #00ff0000;
         border-style: inset;
-        border-width: 2px;
+        border-width: 0px;
         border-radius: 10px;
         border-color: white;
         ''')
         minimizeButton = QPushButton("―")
-        maximizeButton = QPushButton("□")
         closeButton = QPushButton("X")
         minimizeButton.setFixedSize(25, 25)
-        maximizeButton.setFixedSize(25, 25)
         closeButton.setFixedSize(25, 25)
+        minimizeButton.clicked.connect(lambda: self.showMinimized())
         minimizeButton.setStyleSheet('''
-        background-color: #00ff0000;
-        border-style: inset;
-        border-width: 2px;
-        border-radius: 10px;
-        border-color: black;
-        ''')
-        maximizeButton.setStyleSheet('''
         background-color: #00ff0000;
         border-style: inset;
         border-width: 2px;
@@ -67,7 +61,6 @@ class Window(QWidget):
         titlebox.addWidget(peachImage)
         titlebox.addStretch(1)
         titlebox.addWidget(minimizeButton)
-        titlebox.addWidget(maximizeButton)
         titlebox.addWidget(closeButton)
 
         mainbox.addLayout(titlebox)
@@ -90,7 +83,7 @@ class Window(QWidget):
         playSlider.setMinimum(0)
         playSlider.setMaximum(1000)
         playSlider.setValue(0)
-        # playSlider.setStyleSheet(self.stylesheet())
+        playSlider.setStyleSheet(self.stylesheet())
 
         vbox1.addWidget(musicImage)
         vbox1.addWidget(playSlider)
@@ -154,6 +147,9 @@ class Window(QWidget):
         hvolumeValue = QHBoxLayout()
 
         self.volumeSlider = QDial()
+        self.volumeSlider.setStyleSheet('''
+        background-color: #8BC6E8;
+        ''')
         self.volumeSlider.setMinimum(0)
         self.volumeSlider.setMaximum(100)
         self.volumeSlider.setValue(40)
@@ -178,6 +174,7 @@ class Window(QWidget):
 
         speedList = ["X 1.0", "X 0.25", "X 0.5", "X 0.75", "X 1.25", "X 1.5", "X 1.75", "X 2.0"]
         speedCombobox = QComboBox()
+        speedCombobox.setFixedSize(80, 25)
         speedCombobox.setStyleSheet('''
         border: 2px solid black;
         selection-background-color: lightgray;
@@ -187,13 +184,18 @@ class Window(QWidget):
 
         vbox3.addWidget(speedCombobox)
 
+        #중간에 넣으려는 hboxsetting
+        hboxsetting = QHBoxLayout()
         settingButton = QPushButton()
         settingButton.setFixedSize(30, 30)
         settingButton.setStyleSheet('background-color: #00ff0000')
         settingButton.setIcon(QIcon(self.imageDir+'gear.png'))
         #추후에 수정하기
 
-        vbox3.addWidget(settingButton)
+        hboxsetting.addStretch(1)
+        hboxsetting.addWidget(settingButton)
+        hboxsetting.addStretch(1)
+        vbox3.addLayout(hboxsetting)
 
         hbox3.addLayout(vbox3)
 
@@ -201,9 +203,9 @@ class Window(QWidget):
         vbox4 = QVBoxLayout()
         hbox5 = QHBoxLayout()
 
-        currentMusicList = QListWidget()
-        currentMusicList.move(0,0)
-        currentMusicList.setStyleSheet('''
+        self.currentMusicList = QListWidget()
+        self.currentMusicList.move(0,0)
+        self.currentMusicList.setStyleSheet('''
         background-color: #00ff0000;
         border-style: inset;
         border-width: 2px;
@@ -211,7 +213,11 @@ class Window(QWidget):
         border-color: black;
         ''')
 
-        hbox5.addWidget(currentMusicList)
+        for i in range(0,200):
+            self.currentMusicList.addItem(str(i))
+        self.currentMusicList.addItem(str(11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111))
+
+        hbox5.addWidget(self.currentMusicList)
 
         vbox4.addLayout(hbox5)
 
@@ -229,8 +235,6 @@ class Window(QWidget):
         self.hbox1.addLayout(vbox1)
         self.hbox1.addLayout(vbox4)
         mainbox.addLayout(self.hbox1)
-
-
 
         #메인 설정
         self.setLayout(mainbox)
@@ -301,14 +305,14 @@ class Window(QWidget):
             }
 
             QSlider::add-page:horizontal {
-                background: #fff;
+                background: #FFFEE3;
                 height: 40px;
             }
 
             QSlider::handle:horizontal {
-                background: #bbf;
+                background: #55f;
                 border: 0px;
-                width: 0px;
+                width: 13px;
                 margin-top: 0px;
                 margin-bottom: 0px;
                 border-radius: 0px;
@@ -330,7 +334,22 @@ class subWindow:
         #검색 hbox7
         hbox7 = QHBoxLayout()
         searchInput = QLineEdit()
+        searchInput.setStyleSheet('''
+        background-color: #00ff0000;
+        border: 2px solid black;
+        border-width: 2px;
+        border-color: black;
+        ''')
+
         searchButton = QPushButton()
+        searchButton.setStyleSheet('''
+        background-color: #00ff0000;
+        border-style: inset;
+        border-width: 2px;
+        border-radius: 10px;
+        border-color: black;
+        ''')
+
         searchButton.setFixedSize(30, 30)
         searchButton.setIcon(QIcon(self.imageDir+'magnifying-glass.png'))
 
@@ -346,6 +365,22 @@ class subWindow:
         playListTab = QWidget()
         rankListTab = QWidget()
         myFileTab = QWidget()
+
+        playListTab.setStyleSheet('''
+        background-color: #00ff0000;
+        border: 2px solid black;
+        border-width: 3px;
+        ''')
+        rankListTab.setStyleSheet('''
+        background-color: #00ff0000;
+        border: 2px solid black;
+        border-width: 3px;
+        ''')
+        myFileTab.setStyleSheet('''
+        background-color: #00ff0000;
+        border: 2px solid black;
+        border-width: 3px;
+        ''')
 
         tabs.addTab(playListTab, "재생 목록")
         tabs.addTab(rankListTab, "랭킹")
