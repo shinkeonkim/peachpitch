@@ -464,7 +464,7 @@ class musicItem(QListWidgetItem):
         return self.songName.text()
     
     def getArtistName(self):
-        return self.songName.text()
+        return self.artistName.text()
     
     def getSongTime(self):
         return self.songTime.text()
