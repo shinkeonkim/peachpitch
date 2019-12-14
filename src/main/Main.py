@@ -147,9 +147,6 @@ class Window(QWidget):
         hvolumeValue = QHBoxLayout()
 
         self.volumeSlider = QDial()
-        self.volumeSlider.setStyleSheet('''
-        background-color: #8BC6E8;
-        ''')
         self.volumeSlider.setMinimum(0)
         self.volumeSlider.setMaximum(100)
         self.volumeSlider.setValue(40)
@@ -224,35 +221,88 @@ class Window(QWidget):
         for i in range(10):
             item = QListWidgetItem()
             widget = QWidget()
-            songName = QLabel("제목")
+            songName = QLabel("{}. 제목".format(i+1))
             artistName = QLabel("가수")
             songTime = QLabel("곡 시간")
-            deleteButton = QPushButton("X")
-            deleteButton.setFixedSize(25,25)
-            widgetLayout = QVBoxLayout()
-            widgetLayout1 = QHBoxLayout()
-            widgetLayout2 = QHBoxLayout()
-            widgetLayout1.addWidget(songName, alignment=Qt.AlignLeft)
-            widgetLayout1.addWidget(deleteButton, alignment=Qt.AlignRight)
-            widgetLayout2.addWidget(artistName, alignment=Qt.AlignLeft)
-            widgetLayout2.addWidget(songTime, alignment=Qt.AlignRight)
-            widgetLayout.addLayout(widgetLayout1)
-            widgetLayout.addLayout(widgetLayout2)
-            widget.setLayout(widgetLayout)
+            playButton = QPushButton("▶")
+            playButton.setFixedSize(25,25)
+            deleteCheck = QCheckBox()
+            # deleteButton = QPushButton("X")
+            # deleteButton.setFixedSize(25,25)
+            listVLayout = QVBoxLayout()
+            listHLayout1 = QHBoxLayout()
+            listHLayout2 = QHBoxLayout()
+            listHLayout1.addWidget(songName, alignment=Qt.AlignLeft)
+            # listHLayout1.addWidget(deleteButton, alignment=Qt.AlignRight)
+            listHLayout1.addStretch(10)
+            listHLayout1.addWidget(playButton, alignment=Qt.AlignRight)
+            listHLayout1.addStretch(1)
+            listHLayout1.addWidget(deleteCheck, alignment=Qt.AlignRight)
+            listHLayout2.addWidget(artistName, alignment=Qt.AlignLeft)
+            listHLayout2.addWidget(songTime, alignment=Qt.AlignRight)
+            listVLayout.addLayout(listHLayout1)
+            listVLayout.addLayout(listHLayout2)
+            widget.setLayout(listVLayout)
             item.setSizeHint(widget.sizeHint())
 
             #리스트에 위젯 넣기
             self.currentMusicList.addItem(item)
             self.currentMusicList.setItemWidget(item, widget)
+#
+#         l = [['나의 오랜 연인에게', '  다비치  '], ['헤어진 우리가 지켜야 할 것들', '  김나영, 양다일   '], ['Blueming', '  아이유 '],
+#              ['HIP', '  마마무(Mamamoo)  '], ['늦은 밤 너의 집 앞 골목길에서', '  노을  '], ['마음', '  폴킴  '],
+#              ['Into the Unknown (From "Frozen 2"/Soundtrack Ver.)', '  Idina Menzel, Aurora   '],
+#              ['FEVER (Feat. 수퍼비, BIBI)', '  박진영  '], ['Love poem', '  아이유  '],
+#              ['어떻게 이별까지 사랑하겠어, 널 사랑하는 거지', '  AKMU (악동뮤지션)  '], ['날 보러 와요 (Come See Me)', '  AOA  '],
+#              ['흔들리는 꽃들 속에서 네 샴푸향이 느껴진거야', '  장범준  '], ['안녕', '  폴킴  '],
+#              ['인기 (Feat. 송가인, 챈슬러)', '  MC몽  '], ['이 번호로 전화해줘', '  바이브  '],
+#              ['숨겨진\xa0세상\xa0(Into the Unknown End Credit Ver.) (“겨울왕국\xa02”)', '  태연 (TAEYEON)  '],
+#              ['시간의 바깥', '  아이유  '], ['Obsession', '  EXO  '],
+#              ['조금취했어 (Prod. 2soo)', '  임재현  '],
+#              ['Show Yourself (From "Frozen 2"/Soundtrack Ver.)', '  Idina Menzel, Evan Rachel Wood   '],
+#              ['새 사랑', '  송하예  '], ['오늘도 빛나는 너에게 (To You My Light) (Feat. 이라온)', '  마크툽(MAKTUB)  '],
+#              ['아마두 (Feat. 우원재, 김효은, 넉살, Huckleberry P)', '  염따, 딥 플로우, 팔로알토 (Paloalto), The Quiett, 사이먼 도미닉   '],
+#              ['운명이 내게 말해요', '  헤이즈 (Heize)  '], ['기억해줘요 내 모든 날과 그때를', '  거미  '], ['있어줘요', '장덕철  '],
+#              ['제목없음', '  황치열  '], ['불티 (Spark)', '  태연 (TAEYEON)  '], ['이별은 늘 그렇게 (Duet 정은지)', '허각  '],
+#              ['모든 날, 모든 순간 (Every day, Every Moment)', '  폴킴  '], ['영화 속에 나오는 주인공처럼', '  펀치 (Punch)  '],
+#              ['사랑이란 멜로는 없어', '  전상근  '], ['그 사람', '  아이유  '],
+#              ['내 생애 가장 행복한 시간 Part.2 (Feat. 양다일)', '  MC몽  '], ['샤넬 (Feat. 박봄)', '  MC몽  '], ['unlucky', '  아이유  ']]
+#         for i in l:
+#             self.inCurrentMusicItem = QListWidgetItem()
+#             self.inCurrentMusicItem.setText("""
+# 제목 : {0}
+# 가수 : {1}
+#             """.format(i[0], i[1]))
+#             self.currentMusicList.addItem(self.inCurrentMusicItem)
+
+
+        deleteItem = QListWidgetItem()
+        deleteButtonWidget = QWidget()
+        deleteHBox = QHBoxLayout()
+        deleteButton = QPushButton("삭제")
+        # deleteHBox.addStretch(1)
+        deleteHBox.addWidget(deleteButton)
+        deleteHBox.addStretch(1)
+        deleteButtonWidget.setLayout(deleteHBox)
+        deleteItem.setSizeHint(deleteButtonWidget.sizeHint())
+
+        deleteButton.clicked.connect(self.listdelete)
+
+        # self.currentMusicList.addItem(deleteItem)
+        # self.currentMusicList.setItemWidget(deleteItem, deleteButtonWidget)
 
 
         vbox4.addLayout(hbox5)
 
         #스페이스랑 확장버튼
         hbox6 = QHBoxLayout()
+
+        # 임시
+        hbox6.addWidget(deleteButton)
+
         menuButton = QPushButton()
-        menuButton.setIcon(QIcon(self.imageDir+'plusbutton.png'))
         menuButton.clicked.connect(self.expandWindow1)
+        menuButton.setIcon(QIcon(self.imageDir+'plusbutton.png'))
         hbox6.addStretch(1)
         hbox6.addWidget(menuButton)
 
@@ -315,6 +365,12 @@ class Window(QWidget):
                 layout.removeItem(layout_item)
                 break
 
+    def listdelete(self):
+        print(self.currentMusicList.currentItem())
+        for i in self.currentMusicList.selectedItems():
+            self.currentMusicList.takeItem(self.currentMusicList.row(i))
+        #print(listItems)
+
     #slider bar design
     def stylesheet(self):
         return """
@@ -332,7 +388,7 @@ class Window(QWidget):
             }
 
             QSlider::add-page:horizontal {
-                background: #FFFEE3;
+                background: white;
                 height: 40px;
             }
 
