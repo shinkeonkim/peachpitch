@@ -1,6 +1,7 @@
 from peachData import PeachData
 
 a = PeachData()
-#a.initBillBoard()
+a.initBillboard()
+a.setBillboardMusicList()
 L = a.getBillboardMusicList()
 print(L)

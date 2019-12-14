@@ -25,7 +25,7 @@ print(default_filename)
 
 vids.download(parent_dir)
 
-new_filename = "test.mp3"
+new_filename = "test.wav"
 
 subprocess.Popen(['ffmpeg', '-i', parent_dir + default_filename, parent_dir2 + new_filename])
 

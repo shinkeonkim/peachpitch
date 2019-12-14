@@ -1,4 +1,5 @@
 from PyQt5.QtWidgets import *
+from PyQt5.QtMultimedia import QAudioProbe, QMediaPlayer
 import sys
 from player import *
  
@@ -12,10 +13,17 @@ class CWidget(QWidget):
         self.playlist = []
         self.selectedList = [0]
         self.playOption = QMediaPlaylist.Sequential
- 
+
         self.setWindowTitle('Ocean Coding School')
+        self.audiop = QAudioProbe()
+
         self.initUI()
- 
+    
+    def picture(self):
+        L = self.sender()
+        print(L)
+
+
     def initUI(self):
  
         vbox = QVBoxLayout()        
@@ -177,6 +185,8 @@ class CWidget(QWidget):
             self.pbar.setRange(0, msec)       
  
     def updatePositionChanged(self, index, msec):
+        self.audiop.setSource(self.player.getPlayer())
+        self.audiop.audioBufferProbed(QAudioBuffer = 10).connect(self.picture)
         #print('index:',index, 'position:', msec)
         self.pbar = self.table.cellWidget(index, 1)
         if self.pbar:
