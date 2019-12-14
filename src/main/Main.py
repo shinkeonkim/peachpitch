@@ -83,7 +83,34 @@ class Window(QWidget):
         playSlider.setMinimum(0)
         playSlider.setMaximum(1000)
         playSlider.setValue(0)
-        playSlider.setStyleSheet(self.stylesheet())
+        playSlider.setStyleSheet("""
+            QSlider::groove:horizontal {
+                background: white;
+                height: 40px;
+            }
+
+            QSlider::sub-page:horizontal {
+                background: qlineargradient(x1: 0, y1: 0,    x2: 0, y2: 1,
+                    stop: 0 #66e, stop: 1 #bbf);
+                background: qlineargradient(x1: 0, y1: 0.2, x2: 1, y2: 1,
+                    stop: 0 #bbf, stop: 1 #55f);
+                height: 40px;
+            }
+
+            QSlider::add-page:horizontal {
+                background: white;
+                height: 40px;
+            }
+
+            QSlider::handle:horizontal {
+                background: #55f;
+                border: 0px;
+                width: 13px;
+                margin-top: 0px;
+                margin-bottom: 0px;
+                border-radius: 0px;
+            }
+        """)
 
         vbox1.addWidget(musicImage)
         vbox1.addWidget(playSlider)
@@ -126,7 +153,7 @@ class Window(QWidget):
 
         self.pausePlayButton.setCheckable(True)
 
-        self.pausePlayButton.toggled.connect(self.changeimage)
+        self.pausePlayButton.toggled.connect(self.changeImage)
 
         hbox3.addStretch(1)
         hbox3.addWidget(prevSongButton)
@@ -181,24 +208,24 @@ class Window(QWidget):
 
         vbox3.addWidget(speedCombobox)
 
-        #중간에 넣으려는 hboxsetting
-        hboxsetting = QHBoxLayout()
+        #중간에 넣으려는 hbox5
+        hbox5 = QHBoxLayout()
         settingButton = QPushButton()
         settingButton.setFixedSize(30, 30)
         settingButton.setStyleSheet('background-color: #00ff0000')
         settingButton.setIcon(QIcon(self.imageDir+'gear.png'))
         #추후에 수정하기
 
-        hboxsetting.addStretch(1)
-        hboxsetting.addWidget(settingButton)
-        hboxsetting.addStretch(1)
-        vbox3.addLayout(hboxsetting)
+        hbox5.addStretch(1)
+        hbox5.addWidget(settingButton)
+        hbox5.addStretch(1)
+        vbox3.addLayout(hbox5)
 
         hbox3.addLayout(vbox3)
 
-        #현재 재생목록 리스트 (hbox5)와 확장버튼 vbox4
+        #현재 재생목록 리스트 (hbox6)와 확장버튼 vbox4
         vbox4 = QVBoxLayout()
-        hbox5 = QHBoxLayout()
+        hbox6 = QHBoxLayout()
 
         self.currentMusicList = QListWidget(self)
         self.currentMusicList.move(0,0)
@@ -216,7 +243,7 @@ class Window(QWidget):
         
         ''')
 
-        hbox5.addWidget(self.currentMusicList)
+        hbox6.addWidget(self.currentMusicList)
 
         l = [['나의 오랜 연인에게', '  다비치  '], ['헤어진 우리가 지켜야 할 것들', '  김나영, 양다일   '], ['Blueming', '  아이유 '],
              ['HIP', '  마마무(Mamamoo)  '], ['늦은 밤 너의 집 앞 골목길에서', '  노을  '], ['마음', '  폴킴  '],
@@ -256,25 +283,21 @@ class Window(QWidget):
 
         deleteButton.clicked.connect(self.listdelete)
 
-        # self.currentMusicList.addItem(deleteItem)
-        # self.currentMusicList.setItemWidget(deleteItem, deleteButtonWidget)
-
-
-        vbox4.addLayout(hbox5)
+        vbox4.addLayout(hbox6)
 
         #스페이스랑 확장버튼
-        hbox6 = QHBoxLayout()
+        hbox7 = QHBoxLayout()
 
         # 임시
-        hbox6.addWidget(deleteButton)
+        hbox7.addWidget(deleteButton)
 
         menuButton = QPushButton()
         menuButton.clicked.connect(self.expandWindow1)
         menuButton.setIcon(QIcon(self.imageDir+'plusbutton.png'))
-        hbox6.addStretch(1)
-        hbox6.addWidget(menuButton)
+        hbox7.addStretch(1)
+        hbox7.addWidget(menuButton)
 
-        vbox4.addLayout(hbox6)
+        vbox4.addLayout(hbox7)
         self.vbox5 = subWindow().sub1()
 
         self.hbox1.addLayout(vbox1)
@@ -311,7 +334,7 @@ class Window(QWidget):
     def sliderMoved(self):
         self.volumeValue.setText(str(self.volumeSlider.value()))
 
-    def changeimage(self, pressed):
+    def changeImage(self, pressed):
 
         self.pausePlayButton.setText({True: "❚❚", False: "▶"}[pressed])
 
@@ -334,41 +357,12 @@ class Window(QWidget):
                 break
 
     def listdelete(self):
-        print(self.currentMusicList.currentItem().getSongName())
-        for i in self.currentMusicList.selectedItems():
-            self.currentMusicList.takeItem(self.currentMusicList.row(i))
-        #print(listItems)
-
-    #slider bar design
-    def stylesheet(self):
-        return """
-            QSlider::groove:horizontal {
-                background: white;
-                height: 40px;
-            }
-
-            QSlider::sub-page:horizontal {
-                background: qlineargradient(x1: 0, y1: 0,    x2: 0, y2: 1,
-                    stop: 0 #66e, stop: 1 #bbf);
-                background: qlineargradient(x1: 0, y1: 0.2, x2: 1, y2: 1,
-                    stop: 0 #bbf, stop: 1 #55f);
-                height: 40px;
-            }
-
-            QSlider::add-page:horizontal {
-                background: white;
-                height: 40px;
-            }
-
-            QSlider::handle:horizontal {
-                background: #55f;
-                border: 0px;
-                width: 13px;
-                margin-top: 0px;
-                margin-bottom: 0px;
-                border-radius: 0px;
-            }
-        """
+        try:
+            print(self.currentMusicList.currentItem().getSongName())
+            for i in self.currentMusicList.selectedItems():
+                self.currentMusicList.takeItem(self.currentMusicList.row(i))
+        except:
+            pass
 
 class subWindow:
 
@@ -382,8 +376,8 @@ class subWindow:
         #확장 됬을때 self.vbox5
         self.vbox5 = QVBoxLayout()
 
-        #검색 hbox7
-        hbox7 = QHBoxLayout()
+        #검색 hbox8
+        hbox8 = QHBoxLayout()
         searchInput = QLineEdit()
         searchInput.setStyleSheet('''
         background-color: #00ff0000;
@@ -404,12 +398,12 @@ class subWindow:
         searchButton.setFixedSize(30, 30)
         searchButton.setIcon(QIcon(self.imageDir+'magnifying-glass.png'))
 
-        hbox7.addStretch(1)
-        hbox7.addWidget(searchInput)
-        hbox7.addWidget(searchButton)
-        hbox7.addStretch(1)
+        hbox8.addStretch(1)
+        hbox8.addWidget(searchInput)
+        hbox8.addWidget(searchButton)
+        hbox8.addStretch(1)
 
-        self.vbox5.addLayout(hbox7)
+        self.vbox5.addLayout(hbox8)
 
         #탭뷰
         tabs = QTabWidget()
@@ -448,23 +442,22 @@ class musicItem(QListWidgetItem):
         self.artistName = QLabel("가수: " + artistName)
         self.songTime = QLabel("곡 시간: " + songTime)
         
-        listVLayout = QVBoxLayout()
-        listHLayout1 = QHBoxLayout()
-        listHLayout2 = QHBoxLayout()
-        listHLayout1.addWidget(self.songName, alignment=Qt.AlignLeft)
-        # listHLayout1.addStretch(10)
-        listHLayout2.addWidget(self.artistName, alignment=Qt.AlignLeft)
-        listHLayout2.addWidget(self.songTime, alignment=Qt.AlignRight)
-        listVLayout.addLayout(listHLayout1)
-        listVLayout.addLayout(listHLayout2)
-        widget.setLayout(listVLayout)
+        vbox5 = QVBoxLayout()
+        hbox9 = QHBoxLayout()
+        hbox10 = QHBoxLayout()
+        hbox9.addWidget(self.songName, alignment=Qt.AlignLeft)
+        hbox10.addWidget(self.artistName, alignment=Qt.AlignLeft)
+        hbox10.addWidget(self.songTime, alignment=Qt.AlignRight)
+        vbox5.addLayout(hbox9)
+        vbox5.addLayout(hbox10)
+        widget.setLayout(vbox5)
         self.setSizeHint(widget.sizeHint())
 
     def getSongName(self):
         return self.songName.text()
     
     def getArtistName(self):
-        return self.songName.text()
+        return self.artistName.text()
     
     def getSongTime(self):
         return self.songTime.text()
