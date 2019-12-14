@@ -19,8 +19,8 @@ class Window(QWidget):
     def initUI(self):
         self.setGeometry(100,100,1200,500)
         self.setWindowFlags(Qt.FramelessWindowHint)
-        self.setStyleSheet("* {background: qlineargradient(spread:pad, x1:0 y1:0, x2:1 y2:0, stop:0 #AA99FF, stop:1 #8BC6E8, stop:2 #99F4FF);"
-                       "color: qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 black);}");
+        # self.setStyleSheet("* {background: qlineargradient(spread:pad, x1:0 y1:0, x2:1 y2:0, stop:0 #AA99FF, stop:1 #8BC6E8, stop:2 #99F4FF);"
+        #                "color: qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 black);}");
 
         mainbox = QVBoxLayout()
 
@@ -203,21 +203,48 @@ class Window(QWidget):
         vbox4 = QVBoxLayout()
         hbox5 = QHBoxLayout()
 
-        self.currentMusicList = QListWidget()
+        self.currentMusicList = QListWidget(self)
         self.currentMusicList.move(0,0)
         self.currentMusicList.setStyleSheet('''
+        QListWidget{
         background-color: #00ff0000;
         border-style: inset;
         border-width: 2px;
         border-radius: 10px;
         border-color: black;
+        }
+        QListWidget::item {
+        border: 0px solid red;
+        }
+        
         ''')
 
-        for i in range(0,200):
-            self.currentMusicList.addItem(str(i))
-        self.currentMusicList.addItem(str(11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111))
-
         hbox5.addWidget(self.currentMusicList)
+
+        for i in range(10):
+            item = QListWidgetItem()
+            widget = QWidget()
+            songName = QLabel("제목")
+            artistName = QLabel("가수")
+            songTime = QLabel("곡 시간")
+            deleteButton = QPushButton("X")
+            deleteButton.setFixedSize(25,25)
+            widgetLayout = QVBoxLayout()
+            widgetLayout1 = QHBoxLayout()
+            widgetLayout2 = QHBoxLayout()
+            widgetLayout1.addWidget(songName, alignment=Qt.AlignLeft)
+            widgetLayout1.addWidget(deleteButton, alignment=Qt.AlignRight)
+            widgetLayout2.addWidget(artistName, alignment=Qt.AlignLeft)
+            widgetLayout2.addWidget(songTime, alignment=Qt.AlignRight)
+            widgetLayout.addLayout(widgetLayout1)
+            widgetLayout.addLayout(widgetLayout2)
+            widget.setLayout(widgetLayout)
+            item.setSizeHint(widget.sizeHint())
+
+            #리스트에 위젯 넣기
+            self.currentMusicList.addItem(item)
+            self.currentMusicList.setItemWidget(item, widget)
+
 
         vbox4.addLayout(hbox5)
 
@@ -257,7 +284,7 @@ class Window(QWidget):
             self.boxdelete(self.hbox1,self.vbox5)
             self.setGeometry(self.pos().x(), self.pos().y(), 1200, 500)
         else:
-            self.setGeometry(self.pos().x(), self.pos().y(), 1573, 500)
+            self.setGeometry(self.pos().x(), self.pos().y(), 1568, 500)
             self.vbox5 = subWindow().sub1()
             self.hbox1.addLayout(self.vbox5)
 
@@ -389,6 +416,8 @@ class subWindow:
         self.vbox5.addWidget(tabs)
 
         return self.vbox5
+
+
 
 
 
