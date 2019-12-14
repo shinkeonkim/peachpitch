@@ -189,7 +189,6 @@ class Window(QWidget):
 
         vbox2.addLayout(hvolumeValue)
 
-
         hbox4.addLayout(vbox2)
         hbox3.addLayout(hbox4)
 
@@ -214,8 +213,6 @@ class Window(QWidget):
         settingButton.setFixedSize(30, 30)
         settingButton.setStyleSheet('background-color: #00ff0000')
         settingButton.setIcon(QIcon(self.imageDir+'gear.png'))
-        #추후에 수정하기
-
         hbox5.addStretch(1)
         hbox5.addWidget(settingButton)
         hbox5.addStretch(1)
@@ -271,32 +268,31 @@ class Window(QWidget):
             self.currentMusicList.addItem(item)
             self.currentMusicList.setItemWidget(item, widget)
 
-        deleteItem = QListWidgetItem()
-        deleteButtonWidget = QWidget()
-        deleteHBox = QHBoxLayout()
-        deleteButton = QPushButton("삭제")
-        # deleteHBox.addStretch(1)
-        deleteHBox.addWidget(deleteButton)
-        deleteHBox.addStretch(1)
-        deleteButtonWidget.setLayout(deleteHBox)
-        deleteItem.setSizeHint(deleteButtonWidget.sizeHint())
-
-        deleteButton.clicked.connect(self.listdelete)
 
         vbox4.addLayout(hbox6)
 
-        #스페이스랑 확장버튼
+        #스페이스랑 확장버튼 삭제버튼 재생하기 버튼
         hbox7 = QHBoxLayout()
 
-        # 임시
+        deleteButton = QPushButton("""선택한 노래삭제""")
+        deleteButton.setStyleSheet('''
+        QPushButton {
+        background-color: #00ff0000;
+        border-style: inset;
+        border-width: 2px;
+        border-radius: 10px;
+        border-color: black;
+        }
+        ''')
+        deleteButton.setFixedSize(200,40)
+        deleteButton.clicked.connect(self.listdelete)
+
         hbox7.addWidget(deleteButton)
 
         menuButton = QPushButton()
         menuButton.clicked.connect(self.expandWindow1)
         menuButton.setIcon(QIcon(self.imageDir+'plusbutton.png'))
-        hbox7.addStretch(1)
-        hbox7.addWidget(menuButton)
-
+        hbox7.addWidget(menuButton, alignment=Qt.AlignRight)
         vbox4.addLayout(hbox7)
         self.vbox5 = subWindow().sub1()
 
@@ -376,60 +372,116 @@ class subWindow:
         #확장 됬을때 self.vbox5
         self.vbox5 = QVBoxLayout()
 
-        #검색 hbox8
-        hbox8 = QHBoxLayout()
-        searchInput = QLineEdit()
-        searchInput.setStyleSheet('''
+        #탭뷰
+        tabs = QTabWidget()
+        myFileTab = QWidget()
+        rankListTab = QWidget()
+
+        myFileTab.setStyleSheet('''
+                background-color: #00ff0000;
+                border-style: inset;
+                border-width: 1px;
+                border-radius: 10px;
+                border-color: black;
+                ''')
+
+        rankListTab.setStyleSheet('''
+        QWidget {
         background-color: #00ff0000;
-        border: 2px solid black;
-        border-width: 2px;
+        border-style: inset;
+        border-width: 1px;
+        border-radius: 10px;
         border-color: black;
+        }
         ''')
 
-        searchButton = QPushButton()
-        searchButton.setStyleSheet('''
-        background-color: #00ff0000;
+        tabs.addTab(myFileTab, "내 파일")
+        tabs.addTab(rankListTab, "랭킹")
+        tabs.setStyleSheet("""
+        QTabBar::tab:selected { 
+        background-color: black;
+        font: bold;
+        color: white; 
+        }
+        QTabWidget {
+        background-color: #f0f0f0 
         border-style: inset;
         border-width: 2px;
         border-radius: 10px;
         border-color: black;
-        ''')
+        }
+        
+        """)
 
-        searchButton.setFixedSize(30, 30)
-        searchButton.setIcon(QIcon(self.imageDir+'magnifying-glass.png'))
+        #파일 탭뷰 안에서의 tvbox1 thbox1
+        tvbox1 = QVBoxLayout()
+        thbox1 = QHBoxLayout()
 
-        hbox8.addStretch(1)
-        hbox8.addWidget(searchInput)
-        hbox8.addWidget(searchButton)
-        hbox8.addStretch(1)
+        reFreshButton1 = QPushButton()
+        reFreshButton1.setIcon(QIcon(self.imageDir+'refresh-button'))
+        reFreshButton1.setFixedSize(30,30)
 
-        self.vbox5.addLayout(hbox8)
+        myFileSearchInput = QLineEdit()
+        myFileSearchButton = QPushButton()
+        myFileSearchButton.setFixedSize(30, 30)
+        myFileSearchButton.setIcon(QIcon(self.imageDir + 'magnifying-glass.png'))
 
-        #탭뷰
-        tabs = QTabWidget()
-        playListTab = QWidget()
-        rankListTab = QWidget()
-        myFileTab = QWidget()
+        thbox1.addStretch(5)
+        thbox1.addWidget(myFileSearchInput)
+        thbox1.addWidget(myFileSearchButton)
+        thbox1.addStretch(2)
+        thbox1.addWidget(reFreshButton1)
 
-        playListTab.setStyleSheet('''
-        background-color: #00ff0000;
-        border: 2px solid black;
-        border-width: 3px;
-        ''')
-        rankListTab.setStyleSheet('''
-        background-color: #00ff0000;
-        border: 2px solid black;
-        border-width: 3px;
-        ''')
-        myFileTab.setStyleSheet('''
-        background-color: #00ff0000;
-        border: 2px solid black;
-        border-width: 3px;
-        ''')
+        tvbox1.addLayout(thbox1)
 
-        tabs.addTab(playListTab, "재생 목록")
-        tabs.addTab(rankListTab, "랭킹")
-        tabs.addTab(myFileTab, "내 파일")
+        myFileList = QListWidget()
+        tvbox1.addWidget(myFileList)
+
+        myFileTab.setLayout(tvbox1)
+
+        #랭킹 탭뷰 안에서의 tvbox2 thbox2
+        tvbox2 = QVBoxLayout()
+        thbox2 = QHBoxLayout()
+
+        #랭킹 탭들
+        rankTab = QTabWidget()
+        rankTab.setStyleSheet("""
+        QTabWidget::tab-bar { alignment: center; }
+        """)
+        billboardListTab = QWidget()
+        koreanRankListTab = QWidget()
+
+        rankTab.addTab(billboardListTab, "빌보드")
+        rankTab.addTab(koreanRankListTab, "한국")
+
+        reFreshButton2 = QPushButton()
+        reFreshButton2.setIcon(QIcon(self.imageDir + 'refresh-button'))
+        reFreshButton2.setFixedSize(30, 30)
+
+        thbox2.addWidget(reFreshButton2, alignment=Qt.AlignRight)
+
+        tvbox2.addLayout(thbox2)
+        tvbox2.addWidget(rankTab)
+
+        rankListTab.setLayout(tvbox2)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         self.vbox5.addWidget(tabs)
 
@@ -443,13 +495,13 @@ class musicItem(QListWidgetItem):
         self.songTime = QLabel("곡 시간: " + songTime)
         
         vbox5 = QVBoxLayout()
+        hbox8 = QHBoxLayout()
         hbox9 = QHBoxLayout()
-        hbox10 = QHBoxLayout()
-        hbox9.addWidget(self.songName, alignment=Qt.AlignLeft)
-        hbox10.addWidget(self.artistName, alignment=Qt.AlignLeft)
-        hbox10.addWidget(self.songTime, alignment=Qt.AlignRight)
+        hbox8.addWidget(self.songName, alignment=Qt.AlignLeft)
+        hbox9.addWidget(self.artistName, alignment=Qt.AlignLeft)
+        vbox5.addLayout(hbox8)
         vbox5.addLayout(hbox9)
-        vbox5.addLayout(hbox10)
+        vbox5.addWidget(self.songTime, alignment=Qt.AlignRight)
         widget.setLayout(vbox5)
         self.setSizeHint(widget.sizeHint())
 
