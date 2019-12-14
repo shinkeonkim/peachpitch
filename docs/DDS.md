@@ -18,13 +18,13 @@
 ### Class
 |클래스|메서드|입력 인자|입력 인자 타입|출력 인자|출력 인자 타입|기능|
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-| billboardChart | \_\_init\_\_ 생성자 | X | X | X | X | self.billboardChartDict 선언 |
-| -- | initBillboardChart | X | X | X | X | 1. 빌보드차트 가져오고 <br> chart_billboard 테이블에 가수, 제목 저장 2. 테이블에 저장해논 가수, 제목들 self.billboardChartDict에 저장|
-| -- | initBillboardChartDict | X | X | X | X | chart_billboard 테이블에 저장해논 가수, 제목들로 self.billboardChartDict 갱신|
-| -- | getBillboardChartDict | x | x | self.billboardChartDict | dict() | 빌보드 차트 딕셔너리 반환 |
-| soundseaChart | \_\_init\_\_ 생성자 | X | X | X | X | self.soundseaChartDict 선언 |
-| -- | initSoundseaChartDict | X | X | X | X | 1. 소리 바다 차트 가져오고 <br> chart_soundsea 테이블에 가수, 제목 저장2. 테이블에 저장해논 가수, 제목들 self.soundseaChartDict에 저장  |
-| -- | getSoundseaChartDict | x | x | self.soundseaChartDict | dict() | 소리바다 차트 딕셔너리 반환 |
+| billboardChart | \_\_init\_\_ 생성자 |   |   |  |  | self.billboardChartDict 선언music_database.db와 연결하는 self.conn 선언, self.conn의 cursor인 self.c 선언 |
+| -- | initBillboardChart |  |  |  |  | 1. 빌보드차트 가져오고 <br> chart_billboard 테이블에 가수, 제목 저장 2. 테이블에 저장해논 가수, 제목들 self.billboardChartDict에 저장|
+| -- | initBillboardChartDict |  |  |  |  | chart_billboard 테이블에 저장해논 가수, 제목들로 self.billboardChartDict 갱신|
+| -- | getBillboardChartDict |  |  | self.billboardChartDict | dict() | 빌보드 차트 딕셔너리 반환 |
+| soundseaChart | \_\_init\_\_ 생성자 |  |  |  |  | self.soundseaChartDict 선언 |
+| -- | initSoundseaChartDict |  |  |  |  | 1. 소리 바다 차트 가져오고 <br> chart_soundsea 테이블에 가수, 제목 저장2. 테이블에 저장해논 가수, 제목들 self.soundseaChartDict에 저장  |
+| -- | getSoundseaChartDict |  |  | self.soundseaChartDict | dict() | 소리바다 차트 딕셔너리 반환 |
 | peachTube | \_\_init\_\_ 생성자 | directory_path | str |  |  | self.directory_path에 directory_path 저장|
 | -- | searchSong |          |     |            |         | "https://www.youtube.com/results?search_query=" 에 songName과 artist를 더해 조회하고 유효한 첫번째 동영상의 링크를 return 한다.  |
 | -- | -- | songName | str |            |         |    |
@@ -54,7 +54,10 @@
 | -- | artist | TEXT |   |  | 가수 이름|
 | -- | song_time | TEXT |   |  | 노래 재생 시간 |
 | -- | file  | TEXT |   |  | 암호화된 mp3 파일의 이름 |
-| -- |  |  |   |  | |
+| setting |  |  |   |  | ||
+| -- | billboard_chart_updated_at  | DATETIME |   |  | |빌보드 차트 db 최근 업데이트 시기 |
+| -- | soundsea_chart_updated_at   | DATETIME |   |  | |  소리 바다 차트 db 최근 업데이트 시기|
+| -- | path  | TEXT |   |  | 현재 프로그램이 돌아가고 있는 경로 |
 
 # CONTROLLER
 
