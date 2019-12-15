@@ -50,10 +50,11 @@
 | -- | created_at | DATETIME | | | data 생성 시기|
 | directory_music  |  | | | |  | 사용자가 지정한 path에 있는 노래 목록 db |
 | -- | id | INTEGER |  NOT NULL | PRIMARY_KEY | 노래 파일의 임의 ID |
-| -- | song | TEXT |   |  | 노래 제목|
-| -- | artist | TEXT |   |  | 가수 이름|
+| -- | song_name | TEXT |   |  | 노래 제목|
+| -- | artist_name | TEXT |   |  | 가수 이름|
 | -- | song_time | TEXT |   |  | 노래 재생 시간 |
-| -- | file  | TEXT |   |  | 암호화된 mp3 파일의 이름 |
+| -- | file_name  | TEXT |   |  | 암호화된 mp3 파일의 이름 |
+| -- | created_at | DATETIME |   |  | | DB상 노래가 생성된 시기 |
 | setting |  |  |   |  | ||
 | -- | billboard_chart_updated_at  | DATETIME |   |  | |빌보드 차트 db 최근 업데이트 시기 |
 | -- | soundsea_chart_updated_at   | DATETIME |   |  | |  소리 바다 차트 db 최근 업데이트 시기|
