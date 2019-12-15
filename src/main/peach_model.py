@@ -105,11 +105,61 @@ class soundseaChart:
     def setUpdatedAt(self):
         pass
 
+class peachTube(threading.Thread):
+    def __init__(self,directory_path,artist,title):
+        threading.Thread.__init__(self)
+        self.directory_path = directory_path
+        self.artist = artist
+        self.title = title
+
+    def searchSong(self,parsingTag = 'h3 > a'):
+        link = 'https://www.youtube.com/results?search_query='
+        link = link + "'"+self.artist+"'"+ "+" + "'"+self.title+"'"
+        req = requests.get(link)
+        html = req.text
+        soup = BeautifulSoup(html, 'html.parser')
+
+        try:
+            resultLink = soup.select(
+                parsingTag
+            )[0]['href']
+            print("https://www.youtube.com/"+resultLink)
+        except:
+            print(link)
+            return "Error"    
+        return "https://www.youtube.com/"+resultLink
+
+    def run(self):
+        try:
+            yt = pytube.YouTube(self.searchSong())
+            parent_dir = self.directory_path+"/video/"
+            parent_dir2 = self.directory_path+"/audio/"
+            print(parent_dir,parent_dir2)
+            vids = yt.streams.filter(mime_type = "video/mp4").first()
+            print("*")
+            default_filename = vids.default_filename
+            print("*")
+            vids.download(parent_dir)
+            print("*")
+        except:
+            print("Download Error")
+        else:
+            new_filename = str(default_filename).replace(".mp4",".mp3")
+            subprocess.Popen(['ffmpeg', '-i', parent_dir + default_filename, parent_dir2 + new_filename])
+            print("Download Complete!")
+
+
 if __name__ == "__main__":
+    # peacheTube
+    pTube = peachTube("/".join(sys.argv[0].split("\\")[:-1]),"IU","love poem")
+    pTube.start()
+    
+    # billboard
     test = billboardChart()
     test.initBillboardChart()
     print(test.getBillboardChartDict())
-
+    
+    # soundsea
     test = soundseaChart()
     test.initSoundseaChart()
     print(test.getSoundseaChartDict())
