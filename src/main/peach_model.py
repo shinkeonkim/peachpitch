@@ -49,7 +49,7 @@ class soundseaChart:
         options.add_argument("disable-gpu")
         options.add_argument('lang=ko_KR')
 
-        self.driver = webdriver.Chrome('C:/Users/kimshinkeon/Desktop/peachpitch/chromedriver.exe',chrome_options=options)
+        self.driver = webdriver.Chrome('../../chromedriver.exe',chrome_options=options)
      
         self.soundseaChartDict = {}
         self.conn = sqlite3.connect('music_database.db')
