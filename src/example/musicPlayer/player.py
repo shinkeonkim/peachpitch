@@ -9,8 +9,8 @@ class CPlayer:
  
         self.player = QMediaPlayer()
         self.player.currentMediaChanged.connect(self.mediaChanged)
-        self.player.durationChanged.connect(self.durationChanged)
-        self.player.positionChanged.connect(self.positionChanged)
+        # self.player.durationChanged.connect(self.durationChanged)
+        # self.player.positionChanged.connect(self.positionChanged)
          
         self.playlist = QMediaPlaylist()
  
@@ -53,10 +53,10 @@ class CPlayer:
     def mediaChanged(self, e):
         self.parent.updateMediaChanged(self.playlist.currentIndex())       
  
-    def durationChanged(self, msec):
-        if msec>0:
-            self.parent.updateDurationChanged(self.playlist.currentIndex(), msec)
+    # def durationChanged(self, msec):
+    #     if msec>0:
+    #         self.parent.updateDurationChanged(self.playlist.currentIndex(), msec)
  
-    def positionChanged(self, msec):
-        if msec>0:
-            self.parent.updatePositionChanged(self.playlist.currentIndex(), msec)
+    # def positionChanged(self, msec):
+    #     if msec>0:
+    #         self.parent.updatePositionChanged(self.playlist.currentIndex(), msec)

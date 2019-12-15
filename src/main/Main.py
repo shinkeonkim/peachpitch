@@ -1,6 +1,7 @@
 import sys
 import sip
 import copy
+import hashlib
 from PyQt5.QtWidgets import * 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -14,31 +15,34 @@ billboardChartDict = {}
 soundseaChartDict = {}
 directoryMusicDict = {}
 selectedMusicDict = {}
+playlist = []
+
 class Window(QWidget):
     def __init__(self):
         super().__init__()
         
-        self.player = pcontroller.musicPlayer(self)
-        self.playlist = []
-        self.selectedList = [0]
-        self.playOption = QMediaPlaylist.Sequential
-
-        self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
-
         global pData
+        global playlist
         global billboardChartDict
         global soundseaChartDict
         global directoryMusicDict
         global selectedMusicDict
         # 추후 구현 db 갱신일 비교해서 최근이면 initChartDict()
-        pData.initChart()
-        #pData.initChartDict()
-
+        #pData.initChart()
+        pData.initChartDict()
         pData.initDirectory()
         billboardChartDict = pData.getBillboardChartDict()
         soundseaChartDict = pData.getSoundseaChartDict()
         directoryMusicDict = pData.getDirectoryMusicDict()
-
+        selectedMusicDict = pData.getSelectedMusicDict()
+        
+        playlist = pData.getSelectedMusicPlaylist()
+        self.player = pcontroller.musicPlayer(self)
+        self.selectedList = [0]
+        self.playOption = QMediaPlaylist.Sequential
+        self.createPlaylist
+        self.cnt = 0
+        self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
         self.initVariable()
         self.initUI()
 
@@ -189,7 +193,7 @@ class Window(QWidget):
         self.pausePlayButton.setFixedSize(199, 110)
 
         self.pausePlayButton.setCheckable(True)
-        self.pausePlayButton.toggled.connect(self.changeImage)
+        self.pausePlayButton.clicked.connect(self.changeImage)
         prevSongButton.clicked.connect(self.prev)
         nextSongButton.clicked.connect(self.next)
 
@@ -313,7 +317,7 @@ class Window(QWidget):
         menuButton.setIcon(QIcon(self.imageDir+'plusbutton.png'))
         hbox7.addWidget(menuButton, alignment=Qt.AlignRight)
         vbox4.addLayout(hbox7)
-        self.vbox5 = subWindow(billboardChartDict,soundseaChartDict)
+        self.vbox5 = subWindow(billboardChartDict,soundseaChartDict,self.currentMusicList)
 
         self.hbox1.addLayout(vbox1)
         self.hbox1.addLayout(vbox4)
@@ -342,35 +346,13 @@ class Window(QWidget):
         else:
             self.setGeometry(self.pos().x(), self.pos().y(), 1568, 500)
             self.vbox5 = QVBoxLayout()
-            self.expandWindow1 = subWindow(billboardChartDict,soundseaChartDict)
+            self.expandWindow1 = subWindow(billboardChartDict,soundseaChartDict,self.currentMusicList)
             self.vbox5.addWidget(self.expandWindow1)
             self.hbox1.addLayout(self.vbox5)
 
         self.isExpanded = not self.isExpanded    
 
-    def sliderMoved(self):
-        self.volumeValue.setText(str(self.volumeSlider.value()))
-        self.player.updateVolume(self.volumeSlider.value())
-
-    def changeImage(self, pressed):
-        if pressed:
-            self.player.play()
-        else:
-            self.player.pause()
-        
-        self.pausePlayButton.setText({True: "❚❚", False: "▶"}[pressed])
-
-
-    def deleteItemsOfLayout(self, layout):
-        if layout is not None:
-            while layout.count():
-                item = layout.takeAt(0)
-                widget = item.widget()
-                if widget is not None:
-                    widget.setParent(None)
-                else:
-                    self.deleteItemsOfLayout(item.layout())
-
+    
     def boxdelete(self, layout, box):
         for i in range(layout.count()):
             layout_item = layout.itemAt(i)
@@ -381,21 +363,72 @@ class Window(QWidget):
 
     def listdelete(self):
         try:
-            print(self.currentMusicList.currentItem().getSongName())
+            #print(self.currentMusicList.currentItem().getSongName())
             for i in self.currentMusicList.selectedItems():
                 self.currentMusicList.takeItem(self.currentMusicList.row(i))
         except:
             pass
+    
+    def itemClicked(self):
+        L = self.sender
+        youtubeDownload(L)
 
+    def sliderMoved(self):
+        self.volumeValue.setText(str(self.volumeSlider.value()))
+        self.player.updateVolume(self.volumeSlider.value())
+
+    def changeImage(self):
+        self.cnt = (1- self.cnt)
+        if self.cnt  == 1:
+            if len(playlist) >0:
+                self.player.play(playlist, self.selectedList[0], self.playOption)
+        else:
+            self.player.pause()
+        
+        self.pausePlayButton.setText({True: "❚❚", False: "▶"}[self.cnt])
+
+    def selectChanged(self):
+        self.selectedList.clear()        
+        for item in self.currentMusicList.selectedItems():
+            self.selectedList.append(item.row())
+         
+        self.selectedList = list(set(self.selectedList))
+         
+        if self.table.rowCount()!=0 and len(self.selectedList) == 0:
+            self.selectedList.append(0)
+
+        self.createPlaylist()
+    
+    def createPlaylist(self):
+        playlist.clear()
+        for i in range(self.currentMusicList.row()):
+            artist = self.currentMusicList.itemFromIndex(i).getArtistName()
+            title  = self.currentMusicList.itemFromIndex(i).getSongName()
+            h = hashlib.sha1()
+            h.update((title +" "+artist).encode('utf-8'))
+            file =  h.hexdigest() + ".mp3"
+            directory = pData.getPath()
+            playlist.append((directory + "\\" + file).replace("\\\\","\\"))
+        #print(playlist)
+    
+    def updateMediaChanged(self, index):
+        if index>=0:
+            self.currentMusicList.setCurrentRow(index)
+
+    def deleteItemsOfLayout(self, layout):
+        if layout is not None:
+            while layout.count():
+                item = layout.takeAt(0)
+                widget = item.widget()
+                if widget is not None:
+                    widget.setParent(None)
+                else:
+                    self.deleteItemsOfLayout(item.layout())
     def prev(self):
         self.player.prev()
     
     def next(self):
         self.player.next()
-
-    def itemClicked(self):
-        L = self.sender
-        youtubeDownload(L)
 
     def play(self):
         if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
@@ -405,12 +438,13 @@ class Window(QWidget):
 
 class subWindow(QWidget): 
 
-    def __init__(self,billboardDict, soundseaDict):
+    def __init__(self,billboardDict, soundseaDict, currentMusicList):
         super().__init__()
         global directoryMusicDict
         self.initVariable()
         self.billboardDict = billboardDict
         self.soundseaDict = soundseaDict
+        self.currentMusicList = currentMusicList
         self.initUI()
         
     def initVariable(self):
@@ -497,6 +531,8 @@ class subWindow(QWidget):
         background-color: rgb(128,128,255);
         }
         """)
+        self.myFileList.itemDoubleClicked.connect(self.selectedListUpdate)
+
         self.tvbox1.addWidget(self.myFileList)
 
         self.myFileTab.setLayout(self.tvbox1)
@@ -568,6 +604,23 @@ class subWindow(QWidget):
         koreanRankList.itemDoubleClicked.connect(Window.itemClicked) 
         self.setLayout(self.vbox5)
 
+    def selectedListUpdate(self):
+        title = self.sender().currentItem().getSongName()
+        artist = self.sender().currentItem().getArtistName()
+        L = [title,artist]
+        widget = QWidget()
+        item = musicItem(L[0],L[1],widget)
+        self.currentMusicList.addItem(item)
+        self.currentMusicList.setItemWidget(item, widget)
+        h = hashlib.sha1()
+        h.update((title +" "+artist).encode('utf-8'))
+        file =  h.hexdigest() + ".mp3"
+        directory = pData.getPath()
+        playlist.append(directory + "\\" + file)
+
+        pData.updateSelectedMusicDict({"song":title , "artist":artist , "filename": directory + "\\" + file })
+        #print(playlist)
+
     def refreshButton1Clicked(self):
         pData.initDirectory()   
         directoryMusicDict = pData.getDirectoryMusicDict()
@@ -599,10 +652,10 @@ class musicItem(QListWidgetItem):
         self.setSizeHint(widget.sizeHint())
 
     def getSongName(self):
-        return self.songName.text()
+        return self.songName.text().replace("제목: ","")
     
     def getArtistName(self):
-        return self.artistName.text()
+        return self.artistName.text().replace("가수: ","")
 
 
 def youtubeDownload(L):

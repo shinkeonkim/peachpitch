@@ -9,6 +9,8 @@ import subprocess
 import threading
 import sys
 import hashlib
+from PyQt5.QtCore import Qt, QUrl
+from PyQt5.QtMultimedia import QMediaPlaylist, QMediaContent, QMediaPlayer
    
 class billboardChart:
     def __init__(self):
@@ -105,7 +107,7 @@ class soundseaChart:
         # 추후 구현
         pass
 
-class selectedMusicList:
+class selectedMusicDict:
     def __init__(self):
         self.selectedMusicDict = dict()
         self.conn = sqlite3.connect('music_database.db')
@@ -117,7 +119,7 @@ class selectedMusicList:
         ret = {}
         for i in all_rows:
             ret[i[0]] = {"song": i[1], "artist": i[2], "filename": i[3]}
-        self.soundseaChartDict = ret
+        self.selectedMusicDict = ret
         self.conn.commit()
 
     def addMusic(self, music_dict):
@@ -133,15 +135,15 @@ class selectedMusicList:
         return self.selectedMusicDict
 
 class peachTube(threading.Thread):
-    def __init__(self,directory_path,artist,title,directory_dict):
+    def __init__(self,directory_path,artist,title):
         threading.Thread.__init__(self)
         self.directory_path = directory_path
         self.artist = artist
         self.title = title
-        self.directory_dict = directory_dict
         h = hashlib.sha1()
         h.update((self.title +" "+self.artist).encode('utf-8'))
         self.filename =  h.hexdigest() + ".mp3"
+
     def searchSong(self,parsingTag = 'h3 > a'):
         link = 'https://www.youtube.com/results?search_query='
         link = link + "'"+self.artist+"'"+ "+" + "'"+self.title+"'" + "'lyrics'"
@@ -173,7 +175,6 @@ class peachTube(threading.Thread):
         else:
             new_filename = self.filename
             subprocess.Popen(['ffmpeg', '-i', parent_dir + default_filename, parent_dir2 + new_filename])
-            self.directory_dict[self.title +" "+self.artist] = self.filename
 
 if __name__ == "__main__":
     # peacheTube

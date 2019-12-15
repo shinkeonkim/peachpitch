@@ -9,16 +9,18 @@ import subprocess
 import threading
 import sys
 import hashlib
+from PyQt5.QtCore import Qt, QUrl
+from PyQt5.QtMultimedia import QMediaPlaylist, QMediaContent, QMediaPlayer
 
 import peach_model as pModel
 
-from PyQt5.QtMultimedia import QMediaPlaylist, QMediaContent, QMediaPlayer
 
 class peachData:
     def __init__(self):
         self.path = "\\".join(sys.argv[0].split("\\")[:-1])
         self.billBoardChart= pModel.billboardChart()
         self.soundseaChart = pModel.soundseaChart()
+        self.selectedMusic = pModel.selectedMusicDict()
         self.directoryMusicDict = dict()
         self.conn = sqlite3.connect('music_database.db')
         self.c = self.conn.cursor()
@@ -32,16 +34,29 @@ class peachData:
     def initChart(self):
         self.billBoardChart.initBillboardChart()
         self.soundseaChart.initSoundseaChart()
-    
+        self.selectedMusic.initSelectedMusicDict()
+
     def initChartDict(self):
         self.billBoardChart.initBillboardChartDict()
         self.soundseaChart.initSoundseaChartDict()
+        self.selectedMusic.initSelectedMusicDict()
 
     def getBillboardChartDict(self):
         return self.billBoardChart.getBillboardChartDict()
 
     def getSoundseaChartDict(self):
         return self.soundseaChart.getSoundseaChartDict()
+
+    def getSelectedMusicDict(self):
+        return self.selectedMusic.getSelectedMusicDict()
+
+    def getSelectedMusicPlaylist(self):
+        D = self.selectedMusic.getSelectedMusicDict()
+        #print(D)
+        return [D[i]['filename'] for i in D]
+
+    def updateSelectedMusicDict(self,music_dict):
+        self.selectedMusic.addMusic(music_dict)
 
     def initDirectory(self):
         self.c.execute("SELECT * FROM directory_music")
@@ -56,7 +71,7 @@ class peachData:
         return self.directoryMusicDict
         
     def downloadMusic(self ,artist, song):
-        downloader = pModel.peachTube(self.path, artist,song,self.directoryMusicDict)
+        downloader = pModel.peachTube(self.path, artist,song)
         h = hashlib.sha1()
         h.update((song +" "+artist).encode('utf-8'))
         filename =  h.hexdigest() + ".mp3"
@@ -71,9 +86,6 @@ class musicPlayer:
         self.parent = parent
         self.player = QMediaPlayer()
         self.player.currentMediaChanged.connect(self.mediaChanged)
-        self.player.durationChanged.connect(self.durationChanged)
-        self.player.positionChanged.connect(self.positionChanged)
-         
         self.playlist = QMediaPlaylist()
 
     def getPlayer(self):
@@ -117,15 +129,6 @@ class musicPlayer:
  
     def mediaChanged(self, e):
         self.parent.updateMediaChanged(self.playlist.currentIndex())       
- 
-    def durationChanged(self, msec):
-        if msec>0:
-            self.parent.updateDurationChanged(self.playlist.currentIndex(), msec)
- 
-    def positionChanged(self, msec):
-        if msec>0:
-            self.parent.updatePositionChanged(self.playlist.currentIndex(), msec)
-
 
 # 선수
 # 디렉토리 모델부분에서 DB 수정 하는 코드
