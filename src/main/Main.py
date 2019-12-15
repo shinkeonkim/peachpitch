@@ -19,7 +19,7 @@ class Window(QWidget):
         self.audiop = QAudioProbe()
         self.pData = pcontroller.peachData()
         # 추후 반영 db 갱신일 비교해서 최근이면 initChartDict()
-        self.pData.initChart()
+        self.pData.initChartDict()
         #self.pData.initChartDict()
         self.billboardChartDict = self.pData.getBillboardChartDict()
         self.soundseaChartDict = self.pData.getSoundseaChartDict()
