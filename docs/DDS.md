@@ -36,24 +36,24 @@
 |  | -- | directoryMusicDict | dict()의 레퍼런스 |  |  | 다운로드하고 난뒤 정보를 저장할 딕셔너리 |
 |  | -- | path  | str | | | mp3 파일을 저장할 파일 경로(path) | 
 
+
 ### Database
 |TABLE| COLUMN | TYPE | NULL | Extra | descrption |
 |:-:|:-:|:-:|:-:|:-:|:-:|
 | chart_billboard | | | | | 빌보드 차트 top-100 노래 목록 table  |
-| -- | id | INTEGER |  NOT NULL | PRIMARY_KEY | 차트 순위 |
+| -- | id | INTEGER |  NOT NULL | PRIMARY KEY | 차트 순위 |
 | -- | song_name | TEXT | | | 노래 제목 |
 | -- | artist_name | TEXT | | | 가수 이름 |
 | -- | created_at | DATETIME | | | data 생성 시기 |
 | chart_soundsea | | | | | 소리 바다 차트 top-50 노래 목록|
-| -- | id | INTEGER |  NOT NULL | PRIMARY_KEY | 차트 순위 |
+| -- | id | INTEGER |  NOT NULL | PRIMARY KEY | 차트 순위 |
 | -- | song_name | TEXT | | | 노래 제목 |
 | -- | artist_name | TEXT | | | 가수 이름 |
 | -- | created_at | DATETIME | | | data 생성 시기|
 | directory_music  |  | | | |  | 사용자가 지정한 path에 있는 노래 목록 db |
-| -- | id | INTEGER |  NOT NULL | PRIMARY_KEY | 노래 파일의 임의 ID |
+| -- | id | INTEGER |  NOT NULL | PRIMARY KEY AUTOINCREMENT | 노래 파일의 임의 ID |
 | -- | song_name | TEXT |   |  | 노래 제목|
 | -- | artist_name | TEXT |   |  | 가수 이름|
-| -- | song_time | TEXT |   |  | 노래 재생 시간 |
 | -- | file_name  | TEXT |   |  | 암호화된 mp3 파일의 이름 |
 | -- | created_at | DATETIME |   |  | | DB상 노래가 생성된 시기 |
 | setting |  |  |   |  | ||
