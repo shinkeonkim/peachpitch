@@ -31,7 +31,7 @@ class Window(QWidget):
         global directoryMusicDict
         global selectedMusicDict
         # 추후 구현 db 갱신일 비교해서 최근이면 initChartDict()
-        pData.initChartDict()
+        pData.initChart()
         #pData.initChartDict()
 
         pData.initDirectory()
@@ -426,15 +426,17 @@ class subWindow(QWidget):
         self.rankListTab = QWidget()
 
         self.myFileTab.setStyleSheet('''
+        .QWidget {
         background-color: #f0f0f0 ;
         border-style: inset;
         border-width: 1px;
         border-radius: 10px;
         border-color: black;
+        }
         ''')
 
         self.rankListTab.setStyleSheet('''
-        QWidget {
+        .QWidget {
         background-color: #f0f0f0 ;
         border-style: inset;
         border-width: 1px;
@@ -451,7 +453,7 @@ class subWindow(QWidget):
         font: bold;
         color: white; 
         }
-        QTabWidget {
+        .QTabWidget {
         background-color: #f0f0f0 
         border-style: inset;
         border-width: 2px;
@@ -484,6 +486,17 @@ class subWindow(QWidget):
         self.tvbox1.addLayout(self.thbox1)
 
         self.myFileList = QListWidget()
+        self.myFileList.setStyleSheet("""
+        .QListWidget {
+        background-color: #f0f0f0;
+        }
+        QListWidget::item {
+        background-color: rgb(255,255,255);
+        }
+        QListWidget::item:selected {
+        background-color: rgb(128,128,255);
+        }
+        """)
         self.tvbox1.addWidget(self.myFileList)
 
         self.myFileTab.setLayout(self.tvbox1)
@@ -507,6 +520,17 @@ class subWindow(QWidget):
         """)
         billboardList = QListWidget()
         koreanRankList = QListWidget()
+
+        billboardList.setStyleSheet("""
+        QListWidget::item:selected {
+        background: rgb(128,128,255);
+        }
+        """)
+        koreanRankList.setStyleSheet("""
+        QListWidget::item:selected {
+        background: rgb(128,128,255);
+        }
+        """)
 
 
         self.reFreshButton2 = QPushButton()
