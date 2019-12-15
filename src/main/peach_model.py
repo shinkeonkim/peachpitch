@@ -8,15 +8,8 @@ import os
 import subprocess
 import threading
 import sys
-
-options = webdriver.ChromeOptions()
-options.add_argument('headless')
-options.add_argument('window-size=1920x1080')
-options.add_argument("disable-gpu")
-options.add_argument('lang=ko_KR')
-
-driver = webdriver.Chrome('C:/Users/kimshinkeon/Desktop/peachpitch/chromedriver.exe',chrome_options=options)
-        
+import hashlib
+   
 class billboardChart:
     def __init__(self):
         self.billboardCharDict = {}
@@ -50,18 +43,24 @@ class billboardChart:
 
 class soundseaChart:
     def __init__(self):
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
+        options.add_argument('window-size=1920x1080')
+        options.add_argument("disable-gpu")
+        options.add_argument('lang=ko_KR')
+
+        self.driver = webdriver.Chrome('C:/Users/kimshinkeon/Desktop/peachpitch/chromedriver.exe',chrome_options=options)
+     
         self.soundseaChartDict = {}
         self.conn = sqlite3.connect('music_database.db')
         self.c = self.conn.cursor()
     
     def initSoundseaChart(self):
         ret = {}
-
-        global driver
         link = 'http://www.soribada.com/music/chart/daily'
-        driver.get(link)
-        driver.implicitly_wait(10)
-        html = driver.page_source
+        self.driver.get(link)
+        self.driver.implicitly_wait(10)
+        html = self.driver.page_source
 
         #print(html)
         soup = BeautifulSoup(html, 'html.parser')
@@ -106,11 +105,13 @@ class soundseaChart:
         pass
 
 class peachTube(threading.Thread):
-    def __init__(self,directory_path,artist,title):
+    def __init__(self,directory_path,artist,title,directory_dict):
         threading.Thread.__init__(self)
         self.directory_path = directory_path
         self.artist = artist
         self.title = title
+        self.directory_dict = directory_dict
+        self.filename = ""
 
     def searchSong(self,parsingTag = 'h3 > a'):
         link = 'https://www.youtube.com/results?search_query='
@@ -134,32 +135,42 @@ class peachTube(threading.Thread):
             yt = pytube.YouTube(self.searchSong())
             parent_dir = self.directory_path+"/video/"
             parent_dir2 = self.directory_path+"/audio/"
-            print(parent_dir,parent_dir2)
+            #print(parent_dir,parent_dir2)
+            print(yt.streams.filter(mime_type = "video/mp4"))
             vids = yt.streams.filter(mime_type = "video/mp4").first()
-            print("*")
             default_filename = vids.default_filename
-            print("*")
             vids.download(parent_dir)
-            print("*")
         except:
             print("Download Error")
         else:
-            new_filename = str(default_filename).replace(".mp4",".mp3")
+            h = hashlib.sha1()
+            h.update((self.title +" "+self.artist).encode('utf-8'))
+            self.filename =  h.hexdigest() + ".mp3"
+            new_filename = self.filename
             subprocess.Popen(['ffmpeg', '-i', parent_dir + default_filename, parent_dir2 + new_filename])
+            self.directory_dict[self.title +" "+self.artist] = self.filename
             print("Download Complete!")
 
 
 if __name__ == "__main__":
     # peacheTube
-    pTube = peachTube("/".join(sys.argv[0].split("\\")[:-1]),"IU","love poem")
+    d = dict()
+    path = "/".join(sys.argv[0].split("\\")[:-1])
+    pTube =  peachTube(path,"IU","love poem",d)
+    pTube2 = peachTube(path,"아이들","LION",d)
     pTube.start()
-    
+    pTube2.start()
+
+    for i in range(10):
+        a = input()
+        print(a)
+    print(d)
     # billboard
-    test = billboardChart()
-    test.initBillboardChart()
-    print(test.getBillboardChartDict())
+    # test = billboardChart()
+    # test.initBillboardChart()
+    # print(test.getBillboardChartDict())
     
-    # soundsea
-    test = soundseaChart()
-    test.initSoundseaChart()
-    print(test.getSoundseaChartDict())
+    # # soundsea
+    # test = soundseaChart()
+    # test.initSoundseaChart()
+    # print(test.getSoundseaChartDict())
