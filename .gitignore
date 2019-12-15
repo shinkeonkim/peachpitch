@@ -3,3 +3,5 @@ chromedriver.exe
 pytube/audio/
 pytube/video/
 __pycache__
+audio/
+video/
