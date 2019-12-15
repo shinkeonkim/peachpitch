@@ -448,11 +448,11 @@ class subWindow:
         rankTab.setStyleSheet("""
         QTabWidget::tab-bar { alignment: center; }
         """)
-        billboardListTab = QListWidget()
-        koreanRankListTab = QListWidget()
+        billboardList = QListWidget()
+        koreanRankList = QListWidget()
 
-        rankTab.addTab(billboardListTab, "빌보드")
-        rankTab.addTab(koreanRankListTab, "한국")
+        rankTab.addTab(billboardList, "빌보드")
+        rankTab.addTab(koreanRankList, "한국")
 
         reFreshButton2 = QPushButton()
         reFreshButton2.setIcon(QIcon(self.imageDir + 'refresh-button'))
@@ -466,6 +466,40 @@ class subWindow:
         rankListTab.setLayout(tvbox2)
 
         self.vbox5.addWidget(tabs)
+
+        #리스트에 아이템 추가
+        l = [['나의 오랜 연인에게', '  다비치  '], ['헤어진 우리가 지켜야 할 것들', '  김나영, 양다일   '], ['Blueming', '  아이유 '],
+             ['HIP', '  마마무(Mamamoo)  '], ['늦은 밤 너의 집 앞 골목길에서', '  노을  '], ['마음', '  폴킴  '],
+             ['Into the Unknown (From "Frozen 2"/Soundtrack Ver.)', '  Idina Menzel, Aurora   '],
+             ['FEVER (Feat. 수퍼비, BIBI)', '  박진영  '], ['Love poem', '  아이유  '],
+             ['어떻게 이별까지 사랑하겠어, 널 사랑하는 거지', '  AKMU (악동뮤지션)  '], ['날 보러 와요 (Come See Me)', '  AOA  '],
+             ['흔들리는 꽃들 속에서 네 샴푸향이 느껴진거야', '  장범준  '], ['안녕', '  폴킴  '],
+             ['인기 (Feat. 송가인, 챈슬러)', '  MC몽  '], ['이 번호로 전화해줘', '  바이브  '],
+             ['숨겨진\xa0세상\xa0(Into the Unknown End Credit Ver.) (“겨울왕국\xa02”)', '  태연 (TAEYEON)  '],
+             ['시간의 바깥', '  아이유  '], ['Obsession', '  EXO  '],
+             ['조금취했어 (Prod. 2soo)', '  임재현  '],
+             ['Show Yourself (From "Frozen 2"/Soundtrack Ver.)', '  Idina Menzel, Evan Rachel Wood   '],
+             ['새 사랑', '  송하예  '], ['오늘도 빛나는 너에게 (To You My Light) (Feat. 이라온)', '  마크툽(MAKTUB)  '],
+             ['아마두 (Feat. 우원재, 김효은, 넉살, Huckleberry P)', '  염따, 딥 플로우, 팔로알토 (Paloalto), The Quiett, 사이먼 도미닉   '],
+             ['운명이 내게 말해요', '  헤이즈 (Heize)  '], ['기억해줘요 내 모든 날과 그때를', '  거미  '], ['있어줘요', '장덕철  '],
+             ['제목없음', '  황치열  '], ['불티 (Spark)', '  태연 (TAEYEON)  '], ['이별은 늘 그렇게 (Duet 정은지)', '허각  '],
+             ['모든 날, 모든 순간 (Every day, Every Moment)', '  폴킴  '], ['영화 속에 나오는 주인공처럼', '  펀치 (Punch)  '],
+             ['사랑이란 멜로는 없어', '  전상근  '], ['그 사람', '  아이유  '],
+             ['내 생애 가장 행복한 시간 Part.2 (Feat. 양다일)', '  MC몽  '], ['샤넬 (Feat. 박봄)', '  MC몽  '], ['unlucky', '  아이유  ']]
+
+        for i in l:
+            widget = QWidget()
+            item = musicItem(i[0], i[1], "시간시간시간", widget)
+            # 리스트에 위젯 넣기
+            billboardList.addItem(item)
+            billboardList.setItemWidget(item, widget)
+
+        for i in l:
+            widget = QWidget()
+            item = musicItem(i[0], i[1], "시간시간시간", widget)
+            # 리스트에 위젯 넣기
+            koreanRankList.addItem(item)
+            koreanRankList.setItemWidget(item, widget)
 
         return self.vbox5
 
