@@ -4,10 +4,25 @@ import copy
 from PyQt5.QtWidgets import * 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+from PyQt5.QtMultimedia import QAudioProbe, QMediaPlayer, QMediaPlaylist, QMediaContent
+
+import peach_controller as pcontroller
 
 class Window(QWidget):
     def __init__(self):
         super().__init__()
+        
+        self.player = pcontroller.musicPlayer(self)
+        self.playlist = []
+        self.selectedList = [0]
+        self.playOption = QMediaPlaylist.Sequential
+        self.audiop = QAudioProbe()
+        self.pData = pcontroller.peachData()
+        # 추후 반영 db 갱신일 비교해서 최근이면 initChartDict()
+        self.pData.initChart()
+        #self.pData.initChartDict()
+        self.billboardChartDict = self.pData.getBillboardChartDict()
+        self.soundseaChartDict = self.pData.getSoundseaChartDict()
         self.initVariable()
         self.initUI()
 
@@ -124,7 +139,7 @@ class Window(QWidget):
         nextSongButton = QPushButton("▷｜")
         self.pausePlayButton = QPushButton("",self)
         self.pausePlayButton.setText("▶")
-
+        
         prevSongButton.setStyleSheet('''
         background-color: #00ff0000;
         border-style: inset;
@@ -152,7 +167,6 @@ class Window(QWidget):
         self.pausePlayButton.setFixedSize(199, 110)
 
         self.pausePlayButton.setCheckable(True)
-
         self.pausePlayButton.toggled.connect(self.changeImage)
 
         hbox3.addStretch(1)
@@ -263,7 +277,7 @@ class Window(QWidget):
 
         for i in l:
             widget = QWidget()
-            item = musicItem(i[0],i[1],"시간시간시간",widget)
+            item = musicItem(i[0],i[1],widget)
             #리스트에 위젯 넣기
             self.currentMusicList.addItem(item)
             self.currentMusicList.setItemWidget(item, widget)
@@ -294,7 +308,7 @@ class Window(QWidget):
         menuButton.setIcon(QIcon(self.imageDir+'plusbutton.png'))
         hbox7.addWidget(menuButton, alignment=Qt.AlignRight)
         vbox4.addLayout(hbox7)
-        self.vbox5 = subWindow().sub1()
+        self.vbox5 = subWindow().sub1(self.billboardChartDict,self.soundseaChartDict)
 
         self.hbox1.addLayout(vbox1)
         self.hbox1.addLayout(vbox4)
@@ -322,7 +336,7 @@ class Window(QWidget):
             self.setGeometry(self.pos().x(), self.pos().y(), 1200, 500)
         else:
             self.setGeometry(self.pos().x(), self.pos().y(), 1568, 500)
-            self.vbox5 = subWindow().sub1()
+            self.vbox5 = subWindow().sub1(self.billboardChartDict,self.soundseaChartDict)
             self.hbox1.addLayout(self.vbox5)
 
         self.isExpanded = not self.isExpanded    
@@ -331,8 +345,13 @@ class Window(QWidget):
         self.volumeValue.setText(str(self.volumeSlider.value()))
 
     def changeImage(self, pressed):
-
+        if pressed:
+            self.player.play()
+        else:
+            self.player.pause()
+        
         self.pausePlayButton.setText({True: "❚❚", False: "▶"}[pressed])
+
 
     def deleteItemsOfLayout(self, layout):
         if layout is not None:
@@ -368,7 +387,9 @@ class subWindow:
     def initVariable(self):
         self.imageDir = "../../img/"
 
-    def sub1(self):
+    def sub1(self,billboardDict, soundseaDict):
+        self.billboardDict = billboardDict
+        self.soundseaDict = soundseaDict
         #확장 됬을때 self.vbox5
         self.vbox5 = QVBoxLayout()
 
@@ -467,36 +488,19 @@ class subWindow:
 
         self.vbox5.addWidget(tabs)
 
-        #리스트에 아이템 추가
-        l = [['나의 오랜 연인에게', '  다비치  '], ['헤어진 우리가 지켜야 할 것들', '  김나영, 양다일   '], ['Blueming', '  아이유 '],
-             ['HIP', '  마마무(Mamamoo)  '], ['늦은 밤 너의 집 앞 골목길에서', '  노을  '], ['마음', '  폴킴  '],
-             ['Into the Unknown (From "Frozen 2"/Soundtrack Ver.)', '  Idina Menzel, Aurora   '],
-             ['FEVER (Feat. 수퍼비, BIBI)', '  박진영  '], ['Love poem', '  아이유  '],
-             ['어떻게 이별까지 사랑하겠어, 널 사랑하는 거지', '  AKMU (악동뮤지션)  '], ['날 보러 와요 (Come See Me)', '  AOA  '],
-             ['흔들리는 꽃들 속에서 네 샴푸향이 느껴진거야', '  장범준  '], ['안녕', '  폴킴  '],
-             ['인기 (Feat. 송가인, 챈슬러)', '  MC몽  '], ['이 번호로 전화해줘', '  바이브  '],
-             ['숨겨진\xa0세상\xa0(Into the Unknown End Credit Ver.) (“겨울왕국\xa02”)', '  태연 (TAEYEON)  '],
-             ['시간의 바깥', '  아이유  '], ['Obsession', '  EXO  '],
-             ['조금취했어 (Prod. 2soo)', '  임재현  '],
-             ['Show Yourself (From "Frozen 2"/Soundtrack Ver.)', '  Idina Menzel, Evan Rachel Wood   '],
-             ['새 사랑', '  송하예  '], ['오늘도 빛나는 너에게 (To You My Light) (Feat. 이라온)', '  마크툽(MAKTUB)  '],
-             ['아마두 (Feat. 우원재, 김효은, 넉살, Huckleberry P)', '  염따, 딥 플로우, 팔로알토 (Paloalto), The Quiett, 사이먼 도미닉   '],
-             ['운명이 내게 말해요', '  헤이즈 (Heize)  '], ['기억해줘요 내 모든 날과 그때를', '  거미  '], ['있어줘요', '장덕철  '],
-             ['제목없음', '  황치열  '], ['불티 (Spark)', '  태연 (TAEYEON)  '], ['이별은 늘 그렇게 (Duet 정은지)', '허각  '],
-             ['모든 날, 모든 순간 (Every day, Every Moment)', '  폴킴  '], ['영화 속에 나오는 주인공처럼', '  펀치 (Punch)  '],
-             ['사랑이란 멜로는 없어', '  전상근  '], ['그 사람', '  아이유  '],
-             ['내 생애 가장 행복한 시간 Part.2 (Feat. 양다일)', '  MC몽  '], ['샤넬 (Feat. 박봄)', '  MC몽  '], ['unlucky', '  아이유  ']]
-
-        for i in l:
+    
+        for i in range(1,101):
             widget = QWidget()
-            item = musicItem(i[0], i[1], "시간시간시간", widget)
+            current = self.billboardDict[i]
+            item = musicItem(current['song'], current['artist'], widget)
             # 리스트에 위젯 넣기
             billboardList.addItem(item)
             billboardList.setItemWidget(item, widget)
 
-        for i in l:
+        for i in range(1,51):
             widget = QWidget()
-            item = musicItem(i[0], i[1], "시간시간시간", widget)
+            current = self.soundseaDict[i]
+            item = musicItem(current['song'], current['artist'],  widget)
             # 리스트에 위젯 넣기
             koreanRankList.addItem(item)
             koreanRankList.setItemWidget(item, widget)
@@ -504,11 +508,10 @@ class subWindow:
         return self.vbox5
 
 class musicItem(QListWidgetItem):
-    def __init__(self, songName, artistName, songTime, widget):
+    def __init__(self, songName, artistName, widget):
         super().__init__()
         self.songName = QLabel("제목: " + songName)
         self.artistName = QLabel("가수: " + artistName)
-        self.songTime = QLabel("곡 시간: " + songTime)
         
         vbox5 = QVBoxLayout()
         hbox8 = QHBoxLayout()
@@ -517,7 +520,6 @@ class musicItem(QListWidgetItem):
         hbox9.addWidget(self.artistName, alignment=Qt.AlignLeft)
         vbox5.addLayout(hbox8)
         vbox5.addLayout(hbox9)
-        vbox5.addWidget(self.songTime, alignment=Qt.AlignRight)
         widget.setLayout(vbox5)
         self.setSizeHint(widget.sizeHint())
 
@@ -526,10 +528,6 @@ class musicItem(QListWidgetItem):
     
     def getArtistName(self):
         return self.artistName.text()
-    
-    def getSongTime(self):
-        return self.songTime.text()
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

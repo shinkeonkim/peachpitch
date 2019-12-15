@@ -90,7 +90,7 @@ class soundseaChart:
         self.conn.commit()
     
     def initSoundseaChartDict(self):
-        self.c.execute("SELECT * chart_soundsea")
+        self.c.execute("SELECT * FROM chart_soundsea")
         all_rows = self.c.fetchall()
         ret = {}
         for i in all_rows:
@@ -102,6 +102,7 @@ class soundseaChart:
         return self.soundseaChartDict
 
     def setUpdatedAt(self):
+        # 추후 구현
         pass
 
 class peachTube(threading.Thread):
@@ -111,11 +112,12 @@ class peachTube(threading.Thread):
         self.artist = artist
         self.title = title
         self.directory_dict = directory_dict
-        self.filename = ""
-
+        h = hashlib.sha1()
+        h.update((self.title +" "+self.artist).encode('utf-8'))
+        self.filename =  h.hexdigest() + ".mp3"
     def searchSong(self,parsingTag = 'h3 > a'):
         link = 'https://www.youtube.com/results?search_query='
-        link = link + "'"+self.artist+"'"+ "+" + "'"+self.title+"'"
+        link = link + "'"+self.artist+"'"+ "+" + "'"+self.title+"'" + "'lyrics'"
         req = requests.get(link)
         html = req.text
         soup = BeautifulSoup(html, 'html.parser')
@@ -136,35 +138,24 @@ class peachTube(threading.Thread):
             parent_dir = self.directory_path+"/video/"
             parent_dir2 = self.directory_path+"/audio/"
             #print(parent_dir,parent_dir2)
-            print(yt.streams.filter(mime_type = "video/mp4"))
             vids = yt.streams.filter(mime_type = "video/mp4").first()
             default_filename = vids.default_filename
             vids.download(parent_dir)
         except:
             print("Download Error")
         else:
-            h = hashlib.sha1()
-            h.update((self.title +" "+self.artist).encode('utf-8'))
-            self.filename =  h.hexdigest() + ".mp3"
             new_filename = self.filename
             subprocess.Popen(['ffmpeg', '-i', parent_dir + default_filename, parent_dir2 + new_filename])
             self.directory_dict[self.title +" "+self.artist] = self.filename
-            print("Download Complete!")
-
 
 if __name__ == "__main__":
     # peacheTube
     d = dict()
     path = "/".join(sys.argv[0].split("\\")[:-1])
-    pTube =  peachTube(path,"IU","love poem",d)
+    pTube =  peachTube(path,"IU","좋은 날",d)
     pTube2 = peachTube(path,"아이들","LION",d)
     pTube.start()
     pTube2.start()
-
-    for i in range(10):
-        a = input()
-        print(a)
-    print(d)
     # billboard
     # test = billboardChart()
     # test.initBillboardChart()

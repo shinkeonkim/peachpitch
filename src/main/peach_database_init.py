@@ -5,15 +5,15 @@ conn = sqlite3.connect('music_database.db')
 c = conn.cursor()
 # chart_billboard
 c.execute('''
-CREATE TABLE chart_billboard (id INTEGER PRIMARY_KEY NOT NULL, song_name TEXT, artist_name TEXT, created_at DATETIME)
+CREATE TABLE chart_billboard (id INTEGER PRIMARY KEY NOT NULL, song_name TEXT, artist_name TEXT, created_at DATETIME)
 ''')
 # chart_soundsea
 c.execute('''
-CREATE TABLE chart_soundsea (id INTEGER PRIMARY_KEY NOT NULL, song_name TEXT, artist_name TEXT , created_at DATETIME)
+CREATE TABLE chart_soundsea (id INTEGER PRIMARY KEY NOT NULL, song_name TEXT, artist_name TEXT , created_at DATETIME)
 ''')
 # directory_music
 c.execute('''
-CREATE TABLE directory_music (id INTEGER PRIMARY_KEY NOT NULL, song_name TEXT, artist_name TEXT, song_time TEXT,file_name TEXT, created_at DATETIME)
+CREATE TABLE directory_music (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, song_name TEXT, artist_name TEXT,file_name TEXT, created_at DATETIME)
 ''')
 
 c.execute('''
