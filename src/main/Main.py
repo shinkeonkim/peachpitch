@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtMultimedia import QAudioProbe, QMediaPlayer, QMediaPlaylist, QMediaContent
+from PyQt5.QtMultimediaWidgets import QVideoWidget
 
 import peach_controller as pcontroller
 
@@ -21,6 +22,8 @@ class Window(QWidget):
         self.playlist = []
         self.selectedList = [0]
         self.playOption = QMediaPlaylist.Sequential
+
+        self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
 
         global pData
         global billboardChartDict
@@ -100,10 +103,14 @@ class Window(QWidget):
         vbox1 = QVBoxLayout()
 
         #이미지나 비주얼라이저 자리
-        musicImage = QLabel(self)
-        pixmap = QPixmap(self.imageDir+'black.png')
-        pixmap = pixmap.scaled(800, 800, Qt.KeepAspectRatio)
-        musicImage.setPixmap(pixmap)
+        videoWidget = QVideoWidget()
+        videoWidget.setFixedSize(800, 600)
+        self.playButton = QPushButton()
+        self.playButton.setFixedSize(20, 20)
+        self.playButton.clicked.connect(self.play)
+        self.mediaPlayer.setMedia(QMediaContent(QUrl(self.imageDir + 'peachvideo.avi')))
+
+        self.mediaPlayer.setVideoOutput(videoWidget)
 
         #슬라이더
         playSlider = QSlider()
@@ -112,35 +119,37 @@ class Window(QWidget):
         playSlider.setMaximum(1000)
         playSlider.setValue(0)
         playSlider.setStyleSheet("""
-            QSlider::groove:horizontal {
-                background: white;
-                height: 40px;
-            }
+        QSlider::groove:horizontal {
+            background: white;
+            height: 40px;
+        }
 
-            QSlider::sub-page:horizontal {
-                background: qlineargradient(x1: 0, y1: 0,    x2: 0, y2: 1,
-                    stop: 0 #66e, stop: 1 #bbf);
-                background: qlineargradient(x1: 0, y1: 0.2, x2: 1, y2: 1,
-                    stop: 0 #bbf, stop: 1 #55f);
-                height: 40px;
-            }
+        QSlider::sub-page:horizontal {
+            background: qlineargradient(x1: 0, y1: 0,    x2: 0, y2: 1,
+                stop: 0 #66e, stop: 1 #bbf);
+            background: qlineargradient(x1: 0, y1: 0.2, x2: 1, y2: 1,
+                stop: 0 #bbf, stop: 1 #55f);
+            height: 40px;
+        }
 
-            QSlider::add-page:horizontal {
-                background: white;
-                height: 40px;
-            }
+        QSlider::add-page:horizontal {
+            background: white;
+            height: 40px;
+        }
 
-            QSlider::handle:horizontal {
-                background: #55f;
-                border: 0px;
-                width: 13px;
-                margin-top: 0px;
-                margin-bottom: 0px;
-                border-radius: 0px;
-            }
+        QSlider::handle:horizontal {
+            background: #55f;
+            border: 0px;
+            width: 13px;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            border-radius: 0px;
+        }
         """)
 
-        vbox1.addWidget(musicImage)
+        #동영상용 임시 버튼
+        titlebox.addWidget(self.playButton)
+        vbox1.addWidget(videoWidget)
         vbox1.addWidget(playSlider)
         
         #재생버튼들이랑 볼륨 설정 나눌 hbox2
@@ -388,6 +397,12 @@ class Window(QWidget):
         L = self.sender
         youtubeDownload(L)
 
+    def play(self):
+        if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
+            self.mediaPlayer.stop()
+        else:
+            self.mediaPlayer.play()
+
 class subWindow(QWidget): 
 
     def __init__(self,billboardDict, soundseaDict):
@@ -411,12 +426,12 @@ class subWindow(QWidget):
         self.rankListTab = QWidget()
 
         self.myFileTab.setStyleSheet('''
-                background-color: #f0f0f0 ;
-                border-style: inset;
-                border-width: 1px;
-                border-radius: 10px;
-                border-color: black;
-                ''')
+        background-color: #f0f0f0 ;
+        border-style: inset;
+        border-width: 1px;
+        border-radius: 10px;
+        border-color: black;
+        ''')
 
         self.rankListTab.setStyleSheet('''
         QWidget {
