@@ -105,6 +105,33 @@ class soundseaChart:
         # 추후 구현
         pass
 
+class selectedMusicList:
+    def __init__(self):
+        self.selectedMusicDict = dict()
+        self.conn = sqlite3.connect('music_database.db')
+        self.c = self.conn.cursor()
+    
+    def initSelectedMusicDict(self):
+        self.c.execute("SELECT * FROM selected_music")
+        all_rows = self.c.fetchall()
+        ret = {}
+        for i in all_rows:
+            ret[i[0]] = {"song": i[1], "artist": i[2], "filename": i[3]}
+        self.soundseaChartDict = ret
+        self.conn.commit()
+
+    def addMusic(self, music_dict):
+        self.c.execute('''INSERT INTO selected_music (song_name, artist_name, file_name, created_at) VALUES (?,?,?,DATETIME(\'NOW\'));''',(music_dict['song'],music_dict['artist'],music_dict['filename']))
+        self.selectedMusicDict[1+ len(self.selectedMusicDict)] = music_dict
+        self.conn.commit()
+
+    def deleteMusic(self, music_dict):
+        # 추후 구현
+        pass
+    
+    def getSelectedMusicDict(self):
+        return self.selectedMusicDict
+
 class peachTube(threading.Thread):
     def __init__(self,directory_path,artist,title,directory_dict):
         threading.Thread.__init__(self)

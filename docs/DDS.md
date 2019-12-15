@@ -35,7 +35,12 @@
 |  | -- | link | str |  |  | 다운로드할 유튜브 영상의 링크 |
 |  | -- | directoryMusicDict | dict()의 레퍼런스 |  |  | 다운로드하고 난뒤 정보를 저장할 딕셔너리 |
 |  | -- | path  | str | | | mp3 파일을 저장할 파일 경로(path) | 
-
+| selectedMusic | | | | | | |
+| -- | \_\_init\_\_ 생성자 | | | | | self.selectedMusicDict 선언 |
+| -- | initSelectedMusicDict | | | | | selectedMusicDict 딕셔너리 selected_music 테이블에서 정보 받아와서 초기화 |
+| -- | addMusic | music_dict | dict() | |  | 노래 추가(딕셔너리, DB 모두 추가됨) |
+| -- | deleteMusic | music_dict | dict() | | | 노래 삭제(딕셔너리, DB 모두 삭제됨) |
+| -- | getSelectedMusicDict | self.selectedMusicDict | dict() | | | 전체 노래 딕셔너리 반환 |
 
 ### Database
 |TABLE| COLUMN | TYPE | NULL | Extra | descrption |
@@ -56,6 +61,12 @@
 | -- | artist_name | TEXT |   |  | 가수 이름|
 | -- | file_name  | TEXT |   |  | 암호화된 mp3 파일의 이름 |
 | -- | created_at | DATETIME |   |  | | DB상 노래가 생성된 시기 |
+| selected_music | | | | | | |
+| -- | id | INTEGER |  NOT NULL | PRIMARY KEY AUTOINCREMENT | 노래 파일의 임의 ID |
+| -- | song_name | TEXT |   |  | 노래 제목|
+| -- | artist_name | TEXT |   |  | 가수 이름|
+| -- | file_name  | TEXT |   |  | 암호화된 mp3 파일의 이름 |
+| -- | created_at | DATETIME |   |  | | DB상 노래가 생성된 시기 | 
 | setting |  |  |   |  | ||
 | -- | billboard_chart_updated_at  | DATETIME |   |  | |빌보드 차트 db 최근 업데이트 시기 |
 | -- | soundsea_chart_updated_at   | DATETIME |   |  | |  소리 바다 차트 db 최근 업데이트 시기|
