@@ -95,7 +95,7 @@ class soundseaChart:
         ret = {}
         for i in all_rows:
             ret[i[0]] = {"song": i[1], "artist": i[2]}
-        self.billboardCharDict = ret
+        self.soundseaChartDict = ret
         self.conn.commit()
     
     def getSoundseaChartDict(self):
