@@ -54,7 +54,7 @@ class peachData:
         h = hashlib.sha1()
         h.update((song +" "+artist).encode('utf-8'))
         filename =  h.hexdigest() + ".mp3"
-        self.c.execute('''INSERT INTO directory_music (song_name ,artist_name,file_name, created_at) VALUES (?,?,?,DATETIME(\'NOW\'));''',(str(song),str(artist),str(filename)))
+        self.c.execute('''INSERT INTO directory_music (song_name ,artist_name, file_name, created_at) VALUES (?,?,?,DATETIME(\'NOW\'));''',(str(song),str(artist),str(filename)))
         downloader.start()
 
 class musicPlayer:
@@ -104,7 +104,7 @@ class musicPlayer:
     def updatePlayMode(self, option):
         self.playlist.setPlaybackMode(option)
  
-    def upateVolume(self, vol):
+    def updateVolume(self, vol):
         self.player.setVolume(vol)
  
     def mediaChanged(self, e):

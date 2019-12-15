@@ -8,6 +8,11 @@ from PyQt5.QtMultimedia import QAudioProbe, QMediaPlayer, QMediaPlaylist, QMedia
 
 import peach_controller as pcontroller
 
+pData = pcontroller.peachData()
+billboardChartDict = {}
+soundseaChartDict = {}
+directoryMusicDict = {}
+
 class Window(QWidget):
     def __init__(self):
         super().__init__()
@@ -16,13 +21,20 @@ class Window(QWidget):
         self.playlist = []
         self.selectedList = [0]
         self.playOption = QMediaPlaylist.Sequential
-        self.audiop = QAudioProbe()
-        self.pData = pcontroller.peachData()
-        # 추후 반영 db 갱신일 비교해서 최근이면 initChartDict()
-        self.pData.initChartDict()
-        #self.pData.initChartDict()
-        self.billboardChartDict = self.pData.getBillboardChartDict()
-        self.soundseaChartDict = self.pData.getSoundseaChartDict()
+
+        global pData
+        global billboardChartDict
+        global soundseaChartDict
+        global directoryMusicDict
+        # 추후 구현 db 갱신일 비교해서 최근이면 initChartDict()
+        pData.initChartDict()
+        #pData.initChartDict()
+
+        pData.initDirectory()
+        billboardChartDict = pData.getBillboardChartDict()
+        soundseaChartDict = pData.getSoundseaChartDict()
+        directoryMusicDict = pData.getDirectoryMusicDict()
+
         self.initVariable()
         self.initUI()
 
@@ -168,6 +180,8 @@ class Window(QWidget):
 
         self.pausePlayButton.setCheckable(True)
         self.pausePlayButton.toggled.connect(self.changeImage)
+        prevSongButton.clicked.connect(self.prev)
+        nextSongButton.clicked.connect(self.next)
 
         hbox3.addStretch(1)
         hbox3.addWidget(prevSongButton)
@@ -308,7 +322,7 @@ class Window(QWidget):
         menuButton.setIcon(QIcon(self.imageDir+'plusbutton.png'))
         hbox7.addWidget(menuButton, alignment=Qt.AlignRight)
         vbox4.addLayout(hbox7)
-        self.vbox5 = subWindow().sub1(self.billboardChartDict,self.soundseaChartDict)
+        self.vbox5 = subWindow().sub1(billboardChartDict,soundseaChartDict)
 
         self.hbox1.addLayout(vbox1)
         self.hbox1.addLayout(vbox4)
@@ -336,13 +350,14 @@ class Window(QWidget):
             self.setGeometry(self.pos().x(), self.pos().y(), 1200, 500)
         else:
             self.setGeometry(self.pos().x(), self.pos().y(), 1568, 500)
-            self.vbox5 = subWindow().sub1(self.billboardChartDict,self.soundseaChartDict)
+            self.vbox5 = subWindow().sub1(billboardChartDict,soundseaChartDict)
             self.hbox1.addLayout(self.vbox5)
 
         self.isExpanded = not self.isExpanded    
 
     def sliderMoved(self):
         self.volumeValue.setText(str(self.volumeSlider.value()))
+        self.player.updateVolume(self.volumeSlider.value())
 
     def changeImage(self, pressed):
         if pressed:
@@ -379,6 +394,16 @@ class Window(QWidget):
         except:
             pass
 
+    def prev(self):
+        self.player.prev()
+    
+    def next(self):
+        self.player.next()
+
+    def itemClicked(self):
+        L = self.sender
+        youtubeDownload(L)
+
 class subWindow:
 
     def __init__(self):
@@ -388,8 +413,8 @@ class subWindow:
         self.imageDir = "../../img/"
 
     def sub1(self,billboardDict, soundseaDict):
-        self.billboardDict = billboardDict
-        self.soundseaDict = soundseaDict
+        billboardDict = billboardDict
+        soundseaDict = soundseaDict
         #확장 됬을때 self.vbox5
         self.vbox5 = QVBoxLayout()
 
@@ -472,8 +497,6 @@ class subWindow:
         billboardList = QListWidget()
         koreanRankList = QListWidget()
 
-        rankTab.addTab(billboardList, "빌보드")
-        rankTab.addTab(koreanRankList, "한국")
 
         reFreshButton2 = QPushButton()
         reFreshButton2.setIcon(QIcon(self.imageDir + 'refresh-button'))
@@ -488,23 +511,28 @@ class subWindow:
 
         self.vbox5.addWidget(tabs)
 
-    
+        
+        rankTab.addTab(billboardList, "빌보드")
+        rankTab.addTab(koreanRankList, "한국")
+        
+
         for i in range(1,101):
             widget = QWidget()
-            current = self.billboardDict[i]
+            current = billboardDict[i]
             item = musicItem(current['song'], current['artist'], widget)
             # 리스트에 위젯 넣기
             billboardList.addItem(item)
             billboardList.setItemWidget(item, widget)
-
         for i in range(1,51):
             widget = QWidget()
-            current = self.soundseaDict[i]
+            current = soundseaDict[i]
             item = musicItem(current['song'], current['artist'],  widget)
             # 리스트에 위젯 넣기
             koreanRankList.addItem(item)
             koreanRankList.setItemWidget(item, widget)
-
+        
+        billboardList.itemDoubleClicked.connect(Window.itemClicked)
+        koreanRankList.itemDoubleClicked.connect(Window.itemClicked)
         return self.vbox5
 
 class musicItem(QListWidgetItem):
@@ -512,7 +540,7 @@ class musicItem(QListWidgetItem):
         super().__init__()
         self.songName = QLabel("제목: " + songName)
         self.artistName = QLabel("가수: " + artistName)
-        
+        self.sender = [songName, artistName]
         vbox5 = QVBoxLayout()
         hbox8 = QHBoxLayout()
         hbox9 = QHBoxLayout()
@@ -528,6 +556,12 @@ class musicItem(QListWidgetItem):
     
     def getArtistName(self):
         return self.artistName.text()
+
+
+def youtubeDownload(L):
+    global pData
+    print(L)
+    pData.downloadMusic(L[1], L[0])
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
