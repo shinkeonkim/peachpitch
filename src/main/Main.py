@@ -378,7 +378,7 @@ class subWindow:
         rankListTab = QWidget()
 
         myFileTab.setStyleSheet('''
-                background-color: #00ff0000;
+                background-color: #f0f0f0 ;
                 border-style: inset;
                 border-width: 1px;
                 border-radius: 10px;
@@ -387,7 +387,7 @@ class subWindow:
 
         rankListTab.setStyleSheet('''
         QWidget {
-        background-color: #00ff0000;
+        background-color: #f0f0f0 ;
         border-style: inset;
         border-width: 1px;
         border-radius: 10px;
@@ -450,6 +450,19 @@ class subWindow:
         """)
         billboardListTab = QWidget()
         koreanRankListTab = QWidget()
+
+        billboardList = QListWidget()
+        koreanRankList = QListWidget()
+
+        #리스트 넣어줄 tvbox3 tvbox4
+        tvbox3 = QVBoxLayout()
+        tvbox4 = QVBoxLayout()
+
+        tvbox3.addWidget(billboardList)
+        tvbox4.addWidget(koreanRankList)
+
+        billboardListTab.setLayout(tvbox3)
+        koreanRankListTab.setLayout(tvbox4)
 
         rankTab.addTab(billboardListTab, "빌보드")
         rankTab.addTab(koreanRankListTab, "한국")
