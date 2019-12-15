@@ -44,7 +44,13 @@ class peachData:
         return self.soundseaChart.getSoundseaChartDict()
 
     def initDirectory(self):
-        pass
+        self.c.execute("SELECT * FROM directory_music")
+        all_rows = self.c.fetchall()
+        ret = {}
+        for i in all_rows:
+            ret[i[0]] = {"song": i[1],"artist": i[2], "filename": i[3]}
+        self.directoryMusicDict = ret 
+        self.conn.commit()
 
     def getDirectoryMusicDict(self):
         return self.directoryMusicDict
@@ -54,8 +60,10 @@ class peachData:
         h = hashlib.sha1()
         h.update((song +" "+artist).encode('utf-8'))
         filename =  h.hexdigest() + ".mp3"
-        self.c.execute('''INSERT INTO directory_music (song_name ,artist_name, file_name, created_at) VALUES (?,?,?,DATETIME(\'NOW\'));''',(str(song),str(artist),str(filename)))
+        self.c.execute('''INSERT INTO directory_music (song_name, artist_name, file_name, created_at) VALUES (?,?,?,DATETIME(\'NOW\'));''',(str(song),str(artist),str(filename)))
         downloader.start()
+        self.conn.commit()
+
 
 class musicPlayer:
     def __init__(self, parent):

@@ -12,7 +12,7 @@ pData = pcontroller.peachData()
 billboardChartDict = {}
 soundseaChartDict = {}
 directoryMusicDict = {}
-
+selectedMusicDict = {}
 class Window(QWidget):
     def __init__(self):
         super().__init__()
@@ -26,6 +26,7 @@ class Window(QWidget):
         global billboardChartDict
         global soundseaChartDict
         global directoryMusicDict
+        global selectedMusicDict
         # 추후 구현 db 갱신일 비교해서 최근이면 initChartDict()
         pData.initChartDict()
         #pData.initChartDict()
@@ -270,28 +271,9 @@ class Window(QWidget):
 
         hbox6.addWidget(self.currentMusicList)
 
-        l = [['나의 오랜 연인에게', '  다비치  '], ['헤어진 우리가 지켜야 할 것들', '  김나영, 양다일   '], ['Blueming', '  아이유 '],
-             ['HIP', '  마마무(Mamamoo)  '], ['늦은 밤 너의 집 앞 골목길에서', '  노을  '], ['마음', '  폴킴  '],
-             ['Into the Unknown (From "Frozen 2"/Soundtrack Ver.)', '  Idina Menzel, Aurora   '],
-             ['FEVER (Feat. 수퍼비, BIBI)', '  박진영  '], ['Love poem', '  아이유  '],
-             ['어떻게 이별까지 사랑하겠어, 널 사랑하는 거지', '  AKMU (악동뮤지션)  '], ['날 보러 와요 (Come See Me)', '  AOA  '],
-             ['흔들리는 꽃들 속에서 네 샴푸향이 느껴진거야', '  장범준  '], ['안녕', '  폴킴  '],
-             ['인기 (Feat. 송가인, 챈슬러)', '  MC몽  '], ['이 번호로 전화해줘', '  바이브  '],
-             ['숨겨진\xa0세상\xa0(Into the Unknown End Credit Ver.) (“겨울왕국\xa02”)', '  태연 (TAEYEON)  '],
-             ['시간의 바깥', '  아이유  '], ['Obsession', '  EXO  '],
-             ['조금취했어 (Prod. 2soo)', '  임재현  '],
-             ['Show Yourself (From "Frozen 2"/Soundtrack Ver.)', '  Idina Menzel, Evan Rachel Wood   '],
-             ['새 사랑', '  송하예  '], ['오늘도 빛나는 너에게 (To You My Light) (Feat. 이라온)', '  마크툽(MAKTUB)  '],
-             ['아마두 (Feat. 우원재, 김효은, 넉살, Huckleberry P)', '  염따, 딥 플로우, 팔로알토 (Paloalto), The Quiett, 사이먼 도미닉   '],
-             ['운명이 내게 말해요', '  헤이즈 (Heize)  '], ['기억해줘요 내 모든 날과 그때를', '  거미  '], ['있어줘요', '장덕철  '],
-             ['제목없음', '  황치열  '], ['불티 (Spark)', '  태연 (TAEYEON)  '], ['이별은 늘 그렇게 (Duet 정은지)', '허각  '],
-             ['모든 날, 모든 순간 (Every day, Every Moment)', '  폴킴  '], ['영화 속에 나오는 주인공처럼', '  펀치 (Punch)  '],
-             ['사랑이란 멜로는 없어', '  전상근  '], ['그 사람', '  아이유  '],
-             ['내 생애 가장 행복한 시간 Part.2 (Feat. 양다일)', '  MC몽  '], ['샤넬 (Feat. 박봄)', '  MC몽  '], ['unlucky', '  아이유  ']]
-
-        for i in l:
+        for i in selectedMusicDict:
             widget = QWidget()
-            item = musicItem(i[0],i[1],widget)
+            item = musicItem(selectedMusicDict[i]['song'],selectedMusicDict[i]['artist'],widget)
             #리스트에 위젯 넣기
             self.currentMusicList.addItem(item)
             self.currentMusicList.setItemWidget(item, widget)
@@ -322,7 +304,7 @@ class Window(QWidget):
         menuButton.setIcon(QIcon(self.imageDir+'plusbutton.png'))
         hbox7.addWidget(menuButton, alignment=Qt.AlignRight)
         vbox4.addLayout(hbox7)
-        self.vbox5 = subWindow().sub1(billboardChartDict,soundseaChartDict)
+        self.vbox5 = subWindow(billboardChartDict,soundseaChartDict)
 
         self.hbox1.addLayout(vbox1)
         self.hbox1.addLayout(vbox4)
@@ -350,7 +332,9 @@ class Window(QWidget):
             self.setGeometry(self.pos().x(), self.pos().y(), 1200, 500)
         else:
             self.setGeometry(self.pos().x(), self.pos().y(), 1568, 500)
-            self.vbox5 = subWindow().sub1(billboardChartDict,soundseaChartDict)
+            self.vbox5 = QVBoxLayout()
+            self.expandWindow1 = subWindow(billboardChartDict,soundseaChartDict)
+            self.vbox5.addWidget(self.expandWindow1)
             self.hbox1.addLayout(self.vbox5)
 
         self.isExpanded = not self.isExpanded    
@@ -404,26 +388,29 @@ class Window(QWidget):
         L = self.sender
         youtubeDownload(L)
 
-class subWindow:
+class subWindow(QWidget): 
 
-    def __init__(self):
+    def __init__(self,billboardDict, soundseaDict):
+        super().__init__()
+        global directoryMusicDict
         self.initVariable()
-
+        self.billboardDict = billboardDict
+        self.soundseaDict = soundseaDict
+        self.initUI()
+        
     def initVariable(self):
         self.imageDir = "../../img/"
 
-    def sub1(self,billboardDict, soundseaDict):
-        billboardDict = billboardDict
-        soundseaDict = soundseaDict
+    def initUI(self):
         #확장 됬을때 self.vbox5
         self.vbox5 = QVBoxLayout()
 
         #탭뷰
-        tabs = QTabWidget()
-        myFileTab = QWidget()
-        rankListTab = QWidget()
+        self.tabs = QTabWidget()
+        self.myFileTab = QWidget()
+        self.rankListTab = QWidget()
 
-        myFileTab.setStyleSheet('''
+        self.myFileTab.setStyleSheet('''
                 background-color: #f0f0f0 ;
                 border-style: inset;
                 border-width: 1px;
@@ -431,7 +418,7 @@ class subWindow:
                 border-color: black;
                 ''')
 
-        rankListTab.setStyleSheet('''
+        self.rankListTab.setStyleSheet('''
         QWidget {
         background-color: #f0f0f0 ;
         border-style: inset;
@@ -441,9 +428,9 @@ class subWindow:
         }
         ''')
 
-        tabs.addTab(myFileTab, "내 파일")
-        tabs.addTab(rankListTab, "랭킹")
-        tabs.setStyleSheet("""
+        self.tabs.addTab(self.myFileTab, "내 파일")
+        self.tabs.addTab(self.rankListTab, "랭킹")
+        self.tabs.setStyleSheet("""
         QTabBar::tab:selected { 
         background-color: black;
         font: bold;
@@ -460,80 +447,101 @@ class subWindow:
         """)
 
         #파일 탭뷰 안에서의 tvbox1 thbox1
-        tvbox1 = QVBoxLayout()
-        thbox1 = QHBoxLayout()
+        self.tvbox1 = QVBoxLayout()
+        self.thbox1 = QHBoxLayout()
 
-        reFreshButton1 = QPushButton()
-        reFreshButton1.setIcon(QIcon(self.imageDir+'refresh-button'))
-        reFreshButton1.setFixedSize(30,30)
+        self.refreshButton1 = QPushButton()
+        self.refreshButton1.clicked.connect(self.refreshButton1Clicked)
+        self.refreshButton1.setIcon(QIcon(self.imageDir+'refresh-button'))
+        self.refreshButton1.setFixedSize(30,30)
+        
+        self.myFileSearchInput = QLineEdit()
+        self.myFileSearchButton = QPushButton()
+        self.myFileSearchButton.setFixedSize(30, 30)
+        self.myFileSearchButton.setIcon(QIcon(self.imageDir + 'magnifying-glass.png'))
 
-        myFileSearchInput = QLineEdit()
-        myFileSearchButton = QPushButton()
-        myFileSearchButton.setFixedSize(30, 30)
-        myFileSearchButton.setIcon(QIcon(self.imageDir + 'magnifying-glass.png'))
+        self.thbox1.addStretch(5)
+        self.thbox1.addWidget(self.myFileSearchInput)
+        self.thbox1.addWidget(self.myFileSearchButton)
+        self.thbox1.addStretch(2)
+        self.thbox1.addWidget(self.refreshButton1)
 
-        thbox1.addStretch(5)
-        thbox1.addWidget(myFileSearchInput)
-        thbox1.addWidget(myFileSearchButton)
-        thbox1.addStretch(2)
-        thbox1.addWidget(reFreshButton1)
+        self.tvbox1.addLayout(self.thbox1)
 
-        tvbox1.addLayout(thbox1)
+        self.myFileList = QListWidget()
+        self.tvbox1.addWidget(self.myFileList)
 
-        myFileList = QListWidget()
-        tvbox1.addWidget(myFileList)
+        self.myFileTab.setLayout(self.tvbox1)
 
-        myFileTab.setLayout(tvbox1)
-
+        for i in directoryMusicDict:
+            widget = QWidget()
+            current = directoryMusicDict[i]
+            item = musicItem(current['song'], current['artist'], widget)
+            # 리스트에 위젯 넣기
+            self.myFileList.addItem(item)
+            self.myFileList.setItemWidget(item, widget)
+        
         #랭킹 탭뷰 안에서의 tvbox2 thbox2
-        tvbox2 = QVBoxLayout()
-        thbox2 = QHBoxLayout()
+        self.tvbox2 = QVBoxLayout()
+        self.thbox2 = QHBoxLayout()
 
         #랭킹 탭들
-        rankTab = QTabWidget()
-        rankTab.setStyleSheet("""
+        self.rankTab = QTabWidget()
+        self.rankTab.setStyleSheet("""
         QTabWidget::tab-bar { alignment: center; }
         """)
         billboardList = QListWidget()
         koreanRankList = QListWidget()
 
 
-        reFreshButton2 = QPushButton()
-        reFreshButton2.setIcon(QIcon(self.imageDir + 'refresh-button'))
-        reFreshButton2.setFixedSize(30, 30)
+        self.reFreshButton2 = QPushButton()
+        self.reFreshButton2.setIcon(QIcon(self.imageDir + 'refresh-button'))
+        self.reFreshButton2.setFixedSize(30, 30)
 
-        thbox2.addWidget(reFreshButton2, alignment=Qt.AlignRight)
+        self.thbox2.addWidget(self.reFreshButton2, alignment=Qt.AlignRight)
 
-        tvbox2.addLayout(thbox2)
-        tvbox2.addWidget(rankTab)
+        self.tvbox2.addLayout(self.thbox2)
+        self.tvbox2.addWidget(self.rankTab)
 
-        rankListTab.setLayout(tvbox2)
+        self.rankListTab.setLayout(self.tvbox2)
 
-        self.vbox5.addWidget(tabs)
-
-        
-        rankTab.addTab(billboardList, "빌보드")
-        rankTab.addTab(koreanRankList, "한국")
+        self.vbox5.addWidget(self.tabs)
+        self.rankTab.addTab(billboardList, "빌보드")
+        self.rankTab.addTab(koreanRankList, "한국")
         
 
         for i in range(1,101):
             widget = QWidget()
-            current = billboardDict[i]
+            current = self.billboardDict[i]
             item = musicItem(current['song'], current['artist'], widget)
             # 리스트에 위젯 넣기
             billboardList.addItem(item)
             billboardList.setItemWidget(item, widget)
         for i in range(1,51):
             widget = QWidget()
-            current = soundseaDict[i]
+            current = self.soundseaDict[i]
             item = musicItem(current['song'], current['artist'],  widget)
             # 리스트에 위젯 넣기
             koreanRankList.addItem(item)
             koreanRankList.setItemWidget(item, widget)
         
-        billboardList.itemDoubleClicked.connect(Window.itemClicked)
-        koreanRankList.itemDoubleClicked.connect(Window.itemClicked)
-        return self.vbox5
+        billboardList.itemDoubleClicked.connect(Window.itemClicked) 
+        koreanRankList.itemDoubleClicked.connect(Window.itemClicked) 
+        self.setLayout(self.vbox5)
+
+    def refreshButton1Clicked(self):
+        pData.initDirectory()   
+        directoryMusicDict = pData.getDirectoryMusicDict()
+
+        self.myFileList.clear()
+        for i in directoryMusicDict:
+            widget = QWidget()
+            current = directoryMusicDict[i]
+            item = musicItem(current['song'], current['artist'], widget)
+            # 리스트에 위젯 넣기
+            self.myFileList.addItem(item)
+            self.myFileList.setItemWidget(item, widget)
+
 
 class musicItem(QListWidgetItem):
     def __init__(self, songName, artistName, widget):
