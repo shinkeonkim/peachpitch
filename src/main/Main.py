@@ -448,21 +448,8 @@ class subWindow:
         rankTab.setStyleSheet("""
         QTabWidget::tab-bar { alignment: center; }
         """)
-        billboardListTab = QWidget()
-        koreanRankListTab = QWidget()
-
-        billboardList = QListWidget()
-        koreanRankList = QListWidget()
-
-        #리스트 넣어줄 tvbox3 tvbox4
-        tvbox3 = QVBoxLayout()
-        tvbox4 = QVBoxLayout()
-
-        tvbox3.addWidget(billboardList)
-        tvbox4.addWidget(koreanRankList)
-
-        billboardListTab.setLayout(tvbox3)
-        koreanRankListTab.setLayout(tvbox4)
+        billboardListTab = QListWidget()
+        koreanRankListTab = QListWidget()
 
         rankTab.addTab(billboardListTab, "빌보드")
         rankTab.addTab(koreanRankListTab, "한국")
@@ -477,24 +464,6 @@ class subWindow:
         tvbox2.addWidget(rankTab)
 
         rankListTab.setLayout(tvbox2)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         self.vbox5.addWidget(tabs)
 
