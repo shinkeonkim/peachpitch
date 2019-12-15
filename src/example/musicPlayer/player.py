@@ -6,16 +6,14 @@ class CPlayer:
     def __init__(self, parent):
         # 윈도우 객체
         self.parent = parent
+ 
         self.player = QMediaPlayer()
         self.player.currentMediaChanged.connect(self.mediaChanged)
         self.player.durationChanged.connect(self.durationChanged)
         self.player.positionChanged.connect(self.positionChanged)
          
         self.playlist = QMediaPlaylist()
-    
-    def getPlayer(self):
-        return self.player
-
+ 
     def play(self, playlists, startRow=0, option=QMediaPlaylist.Sequential):       
         if self.player.state() == QMediaPlayer.PausedState:
             self.player.play()
