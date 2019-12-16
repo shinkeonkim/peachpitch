@@ -25,6 +25,7 @@ class billboardChart:
         for i in range(100):
             self.billboardCharDict[i+1] = {"song": chart[i].title ,"artist": chart[i].artist}
             self.c.execute('''INSERT INTO chart_billboard VALUES (?,?,?,DATETIME(\'NOW\'));''',(i+1,chart[i].title,chart[i].artist))
+        self.setUpatedAt()
         self.conn.commit()
 
     def initBillboardChartDict(self):
@@ -40,8 +41,14 @@ class billboardChart:
         return self.billboardCharDict
 
     def setUpatedAt(self):
-        # 추후 구현
-        pass
+        self.c.execute("SELECT * FROM SETTING;")
+        all_rows = self.c.fetchall()
+        if len(all_rows) > 0:
+            self.c.execute('UPDATE SETTING SET billboard_chart_updated_at = DATETIME(\'NOW\');')
+        else:
+            self.c.execute('''INSERT INTO SETTING VALUES (DATETIME(\'NOW\'),DATETIME(\'NOW\'),"");''')
+        print("업뎃")
+        self.conn.commit()
 
 class soundseaChart:
     def __init__(self):
@@ -93,6 +100,7 @@ class soundseaChart:
             self.soundseaChartDict = ret
             for i in range(1,len(ret)+1):
                 self.c.execute('''INSERT INTO chart_soundsea VALUES (?,?,?,DATETIME(\'NOW\'));''',(str(i),ret[i]['song'],ret[i]['artist']))
+        self.setUpdatedAt()
         self.conn.commit()
     
     def initSoundseaChartDict(self):
@@ -108,8 +116,14 @@ class soundseaChart:
         return self.soundseaChartDict
 
     def setUpdatedAt(self):
-        # 추후 구현
-        pass
+        self.c.execute("SELECT * FROM SETTING;")
+        all_rows = self.c.fetchall()
+        if len(all_rows) > 0:
+            self.c.execute('UPDATE SETTING SET soundsea_chart_updated_at = DATETIME(\'NOW\');')
+        else:
+            self.c.execute('''INSERT INTO SETTING VALUES (DATETIME(\'NOW\'),DATETIME(\'NOW\'),"");''')
+        print("업뎃")
+        self.conn.commit()
 
 class selectedMusicDict:
     def __init__(self):
