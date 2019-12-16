@@ -302,7 +302,7 @@ class Window(QWidget):
         border-color: black;
         }
         ''')
-        deleteButton.setFixedSize(200,40)
+        deleteButton.setFixedSize(135,40)
         deleteButton.clicked.connect(self.listdelete)
 
         hbox7.addWidget(deleteButton)
