@@ -52,29 +52,24 @@ class billboardChart:
 
 class soundseaChart:
     def __init__(self):
+        self.soundseaChartDict = {}
+        self.conn = sqlite3.connect('music_database.db')
+        self.c = self.conn.cursor()
+        
+    def initSoundseaChart(self):
+        ret = {}
+        link = 'http://www.soribada.com/music/chart/daily'
         options = webdriver.ChromeOptions()
         options.add_argument('headless')
         options.add_argument('window-size=1920x1080')
         options.add_argument("disable-gpu")
         options.add_argument('lang=ko_KR')
 
-        self.driver = webdriver.Chrome('../../chromedriver.exe',chrome_options=options)
-     
-        self.soundseaChartDict = {}
-        self.conn = sqlite3.connect('music_database.db')
-        self.c = self.conn.cursor()
-    
-    def __del__(self):
-        print("driver close")
-        self.driver.close()
-
-    def initSoundseaChart(self):
-        ret = {}
-        link = 'http://www.soribada.com/music/chart/daily'
-        self.driver.get(link)
-        self.driver.implicitly_wait(10)
-        html = self.driver.page_source
-
+        driver = webdriver.Chrome('../../chromedriver.exe',chrome_options=options)
+        driver.get(link)
+        driver.implicitly_wait(10)
+        html = driver.page_source
+        driver.quit()
         #print(html)
         soup = BeautifulSoup(html, 'html.parser')
 
