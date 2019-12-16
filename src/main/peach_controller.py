@@ -53,7 +53,7 @@ class peachData:
     def getSelectedMusicPlaylist(self):
         D = self.selectedMusic.getSelectedMusicDict()
         #print(D)
-        return [D[i]['filename'] for i in D]
+        return [D[i]['filename'].replace("\\","/") for i in D]
 
     def updateSelectedMusicDict(self,music_dict):
         self.selectedMusic.addMusic(music_dict)
@@ -91,7 +91,8 @@ class musicPlayer:
     def getPlayer(self):
         return self.player
 
-    def play(self, playlists, startRow=0, option=QMediaPlaylist.Sequential):       
+    def play(self, playlists, startRow=0, option=QMediaPlaylist.Sequential): 
+        print(playlists, startRow)      
         if self.player.state() == QMediaPlayer.PausedState:
             self.player.play()
         else:              
@@ -138,4 +139,3 @@ class musicPlayer:
 # 서로 대응시키기
 # 대응이 안되는 경우가 있다면 
 # DB에서 삭제하고 디렉토리에 반영하지 않음.
-

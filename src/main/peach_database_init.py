@@ -23,3 +23,5 @@ CREATE TABLE SETTING (billboard_chart_updated_at DATETIME, soundsea_chart_update
 c.execute('''
 CREATE TABLE selected_music (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, song_name TEXT, artist_name TEXT,file_name TEXT, created_at DATETIME)
 ''')
+
+conn.commit()

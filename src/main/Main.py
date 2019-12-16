@@ -28,8 +28,8 @@ class Window(QWidget):
         global directoryMusicDict
         global selectedMusicDict
         # 추후 구현 db 갱신일 비교해서 최근이면 initChartDict()
-        #pData.initChart()
-        pData.initChartDict()
+        pData.initChart()
+        # pData.initChartDict()
         pData.initDirectory()
         billboardChartDict = pData.getBillboardChartDict()
         soundseaChartDict = pData.getSoundseaChartDict()
@@ -38,7 +38,6 @@ class Window(QWidget):
         
         playlist = pData.getSelectedMusicPlaylist()
         self.player = pcontroller.musicPlayer(self)
-        self.selectedList = [0]
         self.playOption = QMediaPlaylist.Sequential
         self.createPlaylist
         self.cnt = 0
@@ -109,11 +108,7 @@ class Window(QWidget):
         #이미지나 비주얼라이저 자리
         videoWidget = QVideoWidget()
         videoWidget.setFixedSize(800, 600)
-        self.playButton = QPushButton()
-        self.playButton.setFixedSize(20, 20)
-        self.playButton.clicked.connect(self.play)
         self.mediaPlayer.setMedia(QMediaContent(QUrl(self.imageDir + 'peachvideo.avi')))
-
         self.mediaPlayer.setVideoOutput(videoWidget)
 
         #슬라이더
@@ -152,7 +147,6 @@ class Window(QWidget):
         """)
 
         #동영상용 임시 버튼
-        titlebox.addWidget(self.playButton)
         vbox1.addWidget(videoWidget)
         vbox1.addWidget(playSlider)
         
@@ -281,7 +275,7 @@ class Window(QWidget):
         }
         
         ''')
-
+        self.currentMusicList.itemDoubleClicked.connect(self.currentMusicListItemDoubleClicked)
         hbox6.addWidget(self.currentMusicList)
 
         for i in selectedMusicDict:
@@ -368,52 +362,6 @@ class Window(QWidget):
                 self.currentMusicList.takeItem(self.currentMusicList.row(i))
         except:
             pass
-    
-    def itemClicked(self):
-        L = self.sender
-        youtubeDownload(L)
-
-    def sliderMoved(self):
-        self.volumeValue.setText(str(self.volumeSlider.value()))
-        self.player.updateVolume(self.volumeSlider.value())
-
-    def changeImage(self):
-        self.cnt = (1- self.cnt)
-        if self.cnt  == 1:
-            if len(playlist) >0:
-                self.player.play(playlist, self.selectedList[0], self.playOption)
-        else:
-            self.player.pause()
-        
-        self.pausePlayButton.setText({True: "❚❚", False: "▶"}[self.cnt])
-
-    def selectChanged(self):
-        self.selectedList.clear()        
-        for item in self.currentMusicList.selectedItems():
-            self.selectedList.append(item.row())
-         
-        self.selectedList = list(set(self.selectedList))
-         
-        if self.table.rowCount()!=0 and len(self.selectedList) == 0:
-            self.selectedList.append(0)
-
-        self.createPlaylist()
-    
-    def createPlaylist(self):
-        playlist.clear()
-        for i in range(self.currentMusicList.row()):
-            artist = self.currentMusicList.itemFromIndex(i).getArtistName()
-            title  = self.currentMusicList.itemFromIndex(i).getSongName()
-            h = hashlib.sha1()
-            h.update((title +" "+artist).encode('utf-8'))
-            file =  h.hexdigest() + ".mp3"
-            directory = pData.getPath()
-            playlist.append((directory + "\\" + file).replace("\\\\","\\"))
-        #print(playlist)
-    
-    def updateMediaChanged(self, index):
-        if index>=0:
-            self.currentMusicList.setCurrentRow(index)
 
     def deleteItemsOfLayout(self, layout):
         if layout is not None:
@@ -424,17 +372,54 @@ class Window(QWidget):
                     widget.setParent(None)
                 else:
                     self.deleteItemsOfLayout(item.layout())
+    
+    def itemClicked(self):
+        L = self.sender
+        youtubeDownload(L)
+
+    def currentMusicListItemDoubleClicked(self):
+        # print(playlist)
+        self.mediaPlayer.play()
+        # print(self.currentMusicList.currentRow())
+        if len(playlist) >0:
+            self.player.play(playlist, self.currentMusicList.currentRow(), self.playOption)
+
+    def sliderMoved(self):
+        self.volumeValue.setText(str(self.volumeSlider.value()))
+        self.player.updateVolume(self.volumeSlider.value())
+
+    def changeImage(self):
+        self.cnt = (1- self.cnt)
+        if self.cnt  == 1:
+            if len(playlist) >0:
+                self.player.play(playlist, self.currentMusicList.currentRow(), self.playOption)
+            self.mediaPlayer.play()
+        else:
+            self.player.pause()
+            self.mediaPlayer.stop()
+        self.pausePlayButton.setText({True: "❚❚", False: "▶"}[self.cnt])
+    
+    def createPlaylist(self):
+        playlist.clear()
+        for i in range(self.currentMusicList.row()):
+            artist = self.currentMusicList.itemFromIndex(i).getArtistName()
+            title  = self.currentMusicList.itemFromIndex(i).getSongName()
+            h = hashlib.sha1()
+            h.update((title +" "+artist).encode('utf-8'))
+            file =  h.hexdigest() + ".mp3"
+            directory = pData.getPath()+"/audio"
+            playlist.append((directory + "\\\\" + file).replace("\\\\","/"))
+        #print(playlist)
+    
+    def updateMediaChanged(self, index):
+        if index>=0:
+            self.currentMusicList.setCurrentRow(index)
+
     def prev(self):
         self.player.prev()
     
     def next(self):
         self.player.next()
-
-    def play(self):
-        if self.mediaPlayer.state() == QMediaPlayer.PlayingState:
-            self.mediaPlayer.stop()
-        else:
-            self.mediaPlayer.play()
 
 class subWindow(QWidget): 
 
@@ -615,10 +600,10 @@ class subWindow(QWidget):
         h = hashlib.sha1()
         h.update((title +" "+artist).encode('utf-8'))
         file =  h.hexdigest() + ".mp3"
-        directory = pData.getPath()
-        playlist.append(directory + "\\" + file)
+        directory = pData.getPath() + "/audio"
+        playlist.append((directory + "\\\\" + file).replace("\\\\","/"))
 
-        pData.updateSelectedMusicDict({"song":title , "artist":artist , "filename": directory + "\\" + file })
+        pData.updateSelectedMusicDict({"song":title , "artist":artist , "filename": directory + "/" + file })
         #print(playlist)
 
     def refreshButton1Clicked(self):
