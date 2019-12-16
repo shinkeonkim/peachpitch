@@ -267,12 +267,13 @@ class Window(QWidget):
 
         #중간에 넣으려는 hbox5
         hbox5 = QHBoxLayout()
-        settingButton = QPushButton()
-        settingButton.setFixedSize(30, 30)
-        settingButton.setStyleSheet('background-color: #00ff0000')
-        settingButton.setIcon(QIcon(self.imageDir+'gear.png'))
+        self.settingButton = QPushButton()
+        self.settingButton.setFixedSize(30, 30)
+        self.settingButton.setStyleSheet('background-color: #00ff0000')
+        self.settingButton.setIcon(QIcon(self.imageDir+'gear.png'))
+        self.settingButton.clicked.connect(self.settingWindowPopup)
         hbox5.addStretch(1)
-        hbox5.addWidget(settingButton)
+        hbox5.addWidget(self.settingButton)
         hbox5.addStretch(1)
         vbox3.addLayout(hbox5)
 
@@ -502,6 +503,11 @@ class Window(QWidget):
 
     def setCurrentPlaying(self,title,artist):
         self.currentPlayingLabel.setText("제목: {}\n가수: {}".format(title,artist))
+
+    def settingWindowPopup(self):
+        self.seWindow = settingWindow()
+        self.seWindow.setGeometry(self.pos().x() + 300, self.pos().y() + 200, 250, 200)
+        self.seWindow.show()
 
 class subWindow(QWidget): 
 
@@ -770,6 +776,32 @@ class musicItem(QListWidgetItem):
     
     def getArtistName(self):
         return self.artistName.text().replace("가수: ","")
+
+
+class settingWindow(QWidget):
+
+    def __init__(self):
+        super().__init__()
+        self.imageDir = "../../img/"
+        self.setWindowTitle("설정")
+        self.setWindowIcon(QIcon(self.imageDir+'peach22.png'))
+        self.initUI()
+
+    def initUI(self):
+        self.settingBox = QVBoxLayout()
+        #설정창의 shbox1
+        self.shbox1 = QHBoxLayout()
+
+        self.sakeLLabel = QLabel("노동요 모드(기본 1.5배속)")
+        self.sakeLCheck = QCheckBox()
+
+        self.shbox1.addWidget(self.sakeLLabel, alignment=Qt.AlignLeft)
+        self.shbox1.addWidget(self.sakeLCheck, alignment=Qt.AlignRight)
+
+        self.settingBox.addLayout(self.shbox1)
+
+        self.setLayout(self.settingBox)
+
 
 
 def youtubeDownload(L):
