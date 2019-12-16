@@ -281,8 +281,8 @@ class Window(QWidget):
         vbox4 = QVBoxLayout()
         hbox6 = QHBoxLayout()
 
-        currentPlayingLabel = QLabel("예시예시예시예시예시 264줄")
-        vbox4.addWidget(currentPlayingLabel)
+        self.currentPlayingLabel = QLabel("제목:     가수:")
+        vbox4.addWidget(self.currentPlayingLabel)
 
         self.currentMusicList = QListWidget(self)
         self.currentMusicList.move(0,0)
@@ -355,6 +355,7 @@ class Window(QWidget):
         self.playslider.setRange(0, duration)
 
     def setPosition(self, position):
+        self.setCurrentPlaying(self.currentMusicList.currentItem().getSongName(), self.currentMusicList.currentItem().getArtistName())
         self.player.getPlayer().setPosition(position)
 
     def handleError(self):
@@ -420,16 +421,23 @@ class Window(QWidget):
     def currentMusicListItemDoubleClicked(self):
         # print(playlist)
         self.mediaPlayer.play()
-        
         # print(self.currentMusicList.currentRow())
         if len(playlist) >0:
             self.player.play(playlist, self.currentMusicList.currentRow(), self.playOption)
         self.cnt = 1
         self.pausePlayButton.setText({True: "❚❚", False: "▶"}[self.cnt])
+        try:
+            self.setCurrentPlaying(self.currentMusicList.currentItem().getSongName(), self.currentMusicList.currentItem().getArtistName())
+        except:
+            self.setCurrentPlaying("","")
 
     def sliderMoved(self):
         self.volumeValue.setText(str(self.volumeSlider.value()))
         self.player.updateVolume(self.volumeSlider.value())
+        try:
+            self.setCurrentPlaying(self.currentMusicList.currentItem().getSongName(), self.currentMusicList.currentItem().getArtistName())
+        except:
+            self.setCurrentPlaying("","")
 
     def changeImage(self):
         self.cnt = (1- self.cnt)
@@ -441,7 +449,11 @@ class Window(QWidget):
             self.player.pause()
             self.mediaPlayer.stop()
         self.pausePlayButton.setText({True: "❚❚", False: "▶"}[self.cnt])
-    
+        try:
+            self.setCurrentPlaying(self.currentMusicList.currentItem().getSongName(), self.currentMusicList.currentItem().getArtistName())
+        except:
+            self.setCurrentPlaying("","")
+
     def createPlaylist(self):
         playlist.clear()
         for i in range(self.currentMusicList.row()):
@@ -455,24 +467,37 @@ class Window(QWidget):
         #print(playlist)
     
     def updateMediaChanged(self, index):
+        try:
+            self.setCurrentPlaying(self.currentMusicList.currentItem().getSongName(), self.currentMusicList.currentItem().getArtistName())
+        except:
+            self.setCurrentPlaying("","")
+        
         if index>=0:
             self.currentMusicList.setCurrentRow(index)
 
     def prev(self):
         self.player.prev()
-    
+        try:
+            self.setCurrentPlaying(self.currentMusicList.currentItem().getSongName(), self.currentMusicList.currentItem().getArtistName())
+        except:
+            self.setCurrentPlaying("","")
+        
     def next(self):
         self.player.next()
-
+        try:
+            self.setCurrentPlaying(self.currentMusicList.currentItem().getSongName(), self.currentMusicList.currentItem().getArtistName())
+        except:
+            self.setCurrentPlaying("","")
+        
     def mediaPlayerStatusChanged(self):
         if self.mediaPlayer.mediaStatus() == 7:
             self.mediaPlayer.play()
 
     def getCurrentPlaying(self):
-        pass
+        return self.currentPlayingLabel.text()
 
-    def setCurrentPlaying(self):
-        pass
+    def setCurrentPlaying(self,title,artist):
+        self.currentPlayingLabel.setText("제목: {}\n가수: {}".format(title,artist))
 
 class subWindow(QWidget): 
 
