@@ -92,7 +92,6 @@ class musicPlayer:
         return self.player
 
     def play(self, playlists, startRow=0, option=QMediaPlaylist.Sequential): 
-        print(playlists, startRow)      
         if self.player.state() == QMediaPlayer.PausedState:
             self.player.play()
         else:              

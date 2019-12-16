@@ -59,7 +59,6 @@ class Window(QWidget):
         playlist = pData.getSelectedMusicPlaylist()
         self.player = pcontroller.musicPlayer(self)
         self.playOption = QMediaPlaylist.Sequential
-        self.createPlaylist
         self.cnt = 0
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
         self.mediaPlayer.mediaStatusChanged.connect(self.mediaPlayerStatusChanged)
@@ -298,8 +297,8 @@ class Window(QWidget):
         QListWidget::item {
         border: 0px solid red;
         }
-        
         ''')
+
         self.currentMusicList.itemDoubleClicked.connect(self.currentMusicListItemDoubleClicked)
         hbox6.addWidget(self.currentMusicList)
 
@@ -402,9 +401,23 @@ class Window(QWidget):
 
     def listdelete(self):
         try:
-            #print(self.currentMusicList.currentItem().getSongName())
+            global playlist
+            title = self.currentMusicList.currentItem().getSongName()
+            artist = self.currentMusicList.currentItem().getArtistName()
             for i in self.currentMusicList.selectedItems():
                 self.currentMusicList.takeItem(self.currentMusicList.row(i))
+            f = self.getEncodefilename(title,artist)
+            self.c.execute('DELETE FROM selected_music WHERE file_name LIKE \'%{}\''.format(f))
+            self.conn.commit()
+
+            filename = f.split('/')[-1]
+            ret = []
+            for i in playlist:
+                if filename not in i:
+                    ret.append(i)
+            playlist = ret
+            print(playlist)
+            print("*")
         except:
             pass
 
@@ -457,18 +470,6 @@ class Window(QWidget):
             self.setCurrentPlaying(self.currentMusicList.currentItem().getSongName(), self.currentMusicList.currentItem().getArtistName())
         except:
             self.setCurrentPlaying("","")
-
-    def createPlaylist(self):
-        playlist.clear()
-        for i in range(self.currentMusicList.row()):
-            artist = self.currentMusicList.itemFromIndex(i).getArtistName()
-            title  = self.currentMusicList.itemFromIndex(i).getSongName()
-            h = hashlib.sha1()
-            h.update((title +" "+artist).encode('utf-8'))
-            file =  h.hexdigest() + ".mp3"
-            directory = pData.getPath()+"/audio"
-            playlist.append((directory + "\\\\" + file).replace("\\\\","/"))
-        #print(playlist)
     
     def updateMediaChanged(self, index):
         try:
@@ -502,6 +503,13 @@ class Window(QWidget):
 
     def setCurrentPlaying(self,title,artist):
         self.currentPlayingLabel.setText("제목: {}\n가수: {}".format(title,artist))
+
+    def getEncodefilename(self,title,artist):
+        h = hashlib.sha1()
+        h.update((title +" "+artist).encode('utf-8'))
+        file =  h.hexdigest() + ".mp3"
+        directory = pData.getPath() + "/audio"
+        return (directory + "\\\\" + file).replace("\\\\","/")
 
 class subWindow(QWidget): 
 
@@ -726,14 +734,17 @@ class subWindow(QWidget):
         item = musicItem(L[0],L[1],widget)
         self.currentMusicList.addItem(item)
         self.currentMusicList.setItemWidget(item, widget)
+        f = self.getEncodefilename(title,artist)
+        playlist.append(f)
+        pData.updateSelectedMusicDict({"song":title , "artist":artist , "filename": f })
+        #print(playlist)
+
+    def getEncodefilename(self,title,artist):
         h = hashlib.sha1()
         h.update((title +" "+artist).encode('utf-8'))
         file =  h.hexdigest() + ".mp3"
         directory = pData.getPath() + "/audio"
-        playlist.append((directory + "\\\\" + file).replace("\\\\","/"))
-
-        pData.updateSelectedMusicDict({"song":title , "artist":artist , "filename": directory + "/" + file })
-        #print(playlist)
+        return (directory + "\\\\" + file).replace("\\\\","/")
 
     def refreshButton1Clicked(self):
         pData.initDirectory()   
