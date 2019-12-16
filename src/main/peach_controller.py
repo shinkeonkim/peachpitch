@@ -128,13 +128,4 @@ class musicPlayer:
         self.player.setVolume(vol)
  
     def mediaChanged(self, e):
-        self.parent.updateMediaChanged(self.playlist.currentIndex())       
-
-# 선수
-# 디렉토리 모델부분에서 DB 수정 하는 코드
-
-# initDirectory에서
-# 컨트롤러에서 DB랑, 그 디렉토리 파일 목록 받아들여서
-# 서로 대응시키기
-# 대응이 안되는 경우가 있다면 
-# DB에서 삭제하고 디렉토리에 반영하지 않음.
+        self.parent.updateMediaChanged(self.playlist.currentIndex())

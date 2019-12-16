@@ -192,7 +192,7 @@ class peachTube(threading.Thread):
             print("Download Error")
         else:
             new_filename = self.filename
-            subprocess.Popen(['ffmpeg', '-i', parent_dir + default_filename, parent_dir2 + new_filename])
+            subprocess.Popen(['ffmpeg', '-i', parent_dir + default_filename, parent_dir2 + new_filename],shell=False)
 
 if __name__ == "__main__":
     # peacheTube
