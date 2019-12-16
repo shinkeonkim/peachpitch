@@ -57,6 +57,10 @@ class soundseaChart:
         self.conn = sqlite3.connect('music_database.db')
         self.c = self.conn.cursor()
     
+    def __del__(self):
+        print("driver close")
+        self.driver.close()
+
     def initSoundseaChart(self):
         ret = {}
         link = 'http://www.soribada.com/music/chart/daily'
