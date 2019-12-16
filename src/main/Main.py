@@ -257,9 +257,12 @@ class Window(QWidget):
 
         hbox3.addLayout(vbox3)
 
-        #현재 재생목록 리스트 (hbox6)와 확장버튼 vbox4
+        #현재 재생목록 리스트 (hbox6)와 확장버튼 vbox4 현재 재생중인 라벨
         vbox4 = QVBoxLayout()
         hbox6 = QHBoxLayout()
+
+        currentPlayingLabel = QLabel("예시예시예시예시예시 264줄")
+        vbox4.addWidget(currentPlayingLabel)
 
         self.currentMusicList = QListWidget(self)
         self.currentMusicList.move(0,0)
@@ -445,6 +448,12 @@ class Window(QWidget):
         if self.mediaPlayer.mediaStatus() == 7:
             self.mediaPlayer.play()
 
+    def getCurrentPlaying(self):
+        pass
+
+    def setCurrentPlaying(self):
+        pass
+
 class subWindow(QWidget): 
 
     def __init__(self,billboardDict, soundseaDict, currentMusicList):
@@ -467,6 +476,7 @@ class subWindow(QWidget):
         self.tabs = QTabWidget()
         self.myFileTab = QWidget()
         self.rankListTab = QWidget()
+        self.searchingTab = QWidget()
 
         self.myFileTab.setStyleSheet('''
         .QWidget {
@@ -488,8 +498,20 @@ class subWindow(QWidget):
         }
         ''')
 
+        self.searchingTab.setStyleSheet('''
+        .QWidget {
+        background-color: #f0f0f0 ;
+        border-style: inset;
+        border-width: 1px;
+        border-radius: 10px;
+        border-color: black;
+        }
+        ''')
+
+
         self.tabs.addTab(self.myFileTab, "내 파일")
         self.tabs.addTab(self.rankListTab, "랭킹")
+        self.tabs.addTab(self.searchingTab, "검색")
         self.tabs.setStyleSheet("""
         QTabBar::tab:selected { 
         background-color: black;
@@ -577,12 +599,10 @@ class subWindow(QWidget):
         }
         """)
 
+        self.nullSpace = QLabel("          ")
+        self.thbox2.addWidget(self.nullSpace)
 
-        self.reFreshButton2 = QPushButton()
-        self.reFreshButton2.setIcon(QIcon(self.imageDir + 'refresh-button'))
-        self.reFreshButton2.setFixedSize(30, 30)
 
-        self.thbox2.addWidget(self.reFreshButton2, alignment=Qt.AlignRight)
 
         self.tvbox2.addLayout(self.thbox2)
         self.tvbox2.addWidget(self.rankTab)
@@ -610,7 +630,43 @@ class subWindow(QWidget):
             koreanRankList.setItemWidget(item, widget)
         
         billboardList.itemDoubleClicked.connect(Window.itemClicked) 
-        koreanRankList.itemDoubleClicked.connect(Window.itemClicked) 
+        koreanRankList.itemDoubleClicked.connect(Window.itemClicked)
+
+        #검색 탭뷰 안에서의 tvbox3 thbox3
+        self.tvbox3 = QVBoxLayout()
+        self.thbox3 = QHBoxLayout()
+
+        self.webSearchingInput = QLineEdit()
+        self.webSearchingButton = QPushButton()
+
+        self.webSearchingButton.setFixedSize(30, 30)
+        self.webSearchingButton.setIcon(QIcon(self.imageDir + 'magnifying-glass.png'))
+
+        self.thbox3.addStretch(5)
+        self.thbox3.addWidget(self.webSearchingInput)
+        self.thbox3.addWidget(self.webSearchingButton)
+        self.thbox3.addStretch(3)
+
+        self.tvbox3.addLayout(self.thbox3)
+
+        #검색 결과가 나오는 리스트
+        self.webSearchView = QListWidget()
+        self.webSearchView.setStyleSheet("""
+        .QListWidget {
+        background-color: #f0f0f0;
+        }
+        QListWidget::item {
+        background-color: rgb(255,255,255);
+        }
+        QListWidget::item:selected {
+        background-color: rgb(128,128,255);
+        }
+        """)
+
+        self.tvbox3.addWidget(self.webSearchView)
+
+        self.searchingTab.setLayout(self.tvbox3)
+
         self.setLayout(self.vbox5)
 
     def selectedListUpdate(self):
