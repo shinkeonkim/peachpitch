@@ -2,6 +2,8 @@ import sys
 import sip
 import copy
 import hashlib
+import sqlite3
+import datetime
 from PyQt5.QtWidgets import * 
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -28,8 +30,26 @@ class Window(QWidget):
         global directoryMusicDict
         global selectedMusicDict
         # 추후 구현 db 갱신일 비교해서 최근이면 initChartDict()
-        pData.initChart()
-        # pData.initChartDict()
+
+        self.conn = sqlite3.connect('music_database.db')
+        self.c = self.conn.cursor()
+
+        self.c.execute('SELECT * FROM SETTING')
+        row = self.c.fetchall()
+        k = "".join(str(datetime.datetime.utcnow()).split()[0].split("-"))
+        if len(row) == 0: 
+            pData.initChart()
+        else:
+            date1 = "".join(row[0][0].split()[0].split("-"))
+            date2 = "".join(row[0][0].split()[0].split("-"))
+            current = k
+            #print(date1,date2,current)
+            if(date1 != current or date2 != current):
+                pData.initChart()
+            else:
+                pData.initChartDict()
+        self.conn.commit()
+
         pData.initDirectory()
         billboardChartDict = pData.getBillboardChartDict()
         soundseaChartDict = pData.getSoundseaChartDict()
