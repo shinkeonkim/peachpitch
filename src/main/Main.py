@@ -71,7 +71,7 @@ class Window(QWidget):
 
 
     def initUI(self):
-        self.setGeometry(100,100,1200,500)
+        self.setGeometry(100,100,1220,500)
         self.setWindowFlags(Qt.FramelessWindowHint)
         # self.setStyleSheet("* {background: qlineargradient(spread:pad, x1:0 y1:0, x2:1 y2:0, stop:0 #AA99FF, stop:1 #8BC6E8, stop:2 #99F4FF);"
         #                "color: qlineargradient( x1:0 y1:0, x2:1 y2:0, stop:0 black);}");
@@ -282,7 +282,7 @@ class Window(QWidget):
         vbox4 = QVBoxLayout()
         hbox6 = QHBoxLayout()
 
-        self.currentPlayingLabel = QLabel("제목:     가수:")
+        self.currentPlayingLabel = QLabel("제목:     \n가수:")
         vbox4.addWidget(self.currentPlayingLabel)
 
         self.currentMusicList = QListWidget(self)
@@ -383,7 +383,7 @@ class Window(QWidget):
             self.boxdelete(self.hbox1,self.vbox5)
             self.setGeometry(self.pos().x(), self.pos().y(), 1200, 500)
         else:
-            self.setGeometry(self.pos().x(), self.pos().y(), 1568, 500)
+            self.setGeometry(self.pos().x(), self.pos().y(), 1612, 500)
             self.vbox5 = QVBoxLayout()
             self.expandWindow1 = subWindow(billboardChartDict,soundseaChartDict,self.currentMusicList)
             self.vbox5.addWidget(self.expandWindow1)
@@ -695,22 +695,32 @@ class subWindow(QWidget):
         billboardList.itemDoubleClicked.connect(Window.itemClicked) 
         koreanRankList.itemDoubleClicked.connect(Window.itemClicked)
 
-        #검색 탭뷰 안에서의 tvbox3 thbox3
+        #검색 탭뷰 안에서의 tvbox3 thbox3 thbox4
         self.tvbox3 = QVBoxLayout()
         self.thbox3 = QHBoxLayout()
+        self.thbox4 = QHBoxLayout()
 
-        self.webSearchingInput = QLineEdit()
+        self.webSearchingTitleInput = QLineEdit()
+        self.webSearchingArtistInput = QLineEdit()
+        self.webSearchingTitle = QLabel("제목")
+        self.webSearchingArtist = QLabel("가수")
+
         self.webSearchingButton = QPushButton()
-
         self.webSearchingButton.setFixedSize(30, 30)
         self.webSearchingButton.setIcon(QIcon(self.imageDir + 'magnifying-glass.png'))
 
-        self.thbox3.addStretch(5)
-        self.thbox3.addWidget(self.webSearchingInput)
-        self.thbox3.addWidget(self.webSearchingButton)
-        self.thbox3.addStretch(3)
+        self.thbox3.addWidget(self.webSearchingTitle)
+        self.thbox3.addWidget(self.webSearchingTitleInput)
+
+        self.thbox4.addWidget(self.webSearchingArtist)
+        self.thbox4.addWidget(self.webSearchingArtistInput)
+        self.thbox4.addWidget(self.webSearchingButton, alignment=Qt.AlignRight)
+
+        self.thbox4.addWidget(self.webSearchingButton)
+
 
         self.tvbox3.addLayout(self.thbox3)
+        self.tvbox3.addLayout(self.thbox4)
 
         #검색 결과가 나오는 리스트
         self.webSearchView = QListWidget()
