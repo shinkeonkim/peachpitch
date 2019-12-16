@@ -253,16 +253,17 @@ class Window(QWidget):
         vbox3 = QVBoxLayout()
 
         speedList = ["X 1.0", "X 0.25", "X 0.5", "X 0.75", "X 1.25", "X 1.5", "X 1.75", "X 2.0"]
-        speedCombobox = QComboBox()
-        speedCombobox.setFixedSize(80, 25)
-        speedCombobox.setStyleSheet('''
+        self.speedCombobox = QComboBox()
+        self.speedCombobox.setFixedSize(80, 25)
+        self.speedCombobox.setStyleSheet('''
         border: 2px solid black;
         selection-background-color: lightgray;
         ''')
+        self.speedCombobox.currentIndexChanged.connect(self.speedComboboxCurrnetIndexChangedEvent)
         for i in speedList:
-            speedCombobox.addItem(i)
+            self.speedCombobox.addItem(i)
 
-        vbox3.addWidget(speedCombobox)
+        vbox3.addWidget(self.speedCombobox)
 
         #중간에 넣으려는 hbox5
         hbox5 = QHBoxLayout()
@@ -347,6 +348,9 @@ class Window(QWidget):
         self.playslider.sliderMoved.connect(self.setPosition)
         #메인 설정
         self.setLayout(mainbox)
+    
+    def speedComboboxCurrnetIndexChangedEvent(self):
+        self.player.getPlayer().setPlaybackRate(float(self.speedCombobox.currentText().split()[-1]))
 
     def positionChanged(self, position):
         self.playslider.setValue(position)
