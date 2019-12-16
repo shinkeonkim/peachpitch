@@ -71,14 +71,14 @@ class peachData:
         return self.directoryMusicDict
         
     def downloadMusic(self ,artist, song):
-        downloader = pModel.peachTube(self.path, artist,song)
+        downloader = pModel.peachTube(self.path, artist,song)    
         h = hashlib.sha1()
         h.update((song +" "+artist).encode('utf-8'))
         filename =  h.hexdigest() + ".mp3"
         self.c.execute('''INSERT INTO directory_music (song_name, artist_name, file_name, created_at) VALUES (?,?,?,DATETIME(\'NOW\'));''',(str(song),str(artist),str(filename)))
-        downloader.start()
+        
         self.conn.commit()
-
+        downloader.start()
 
 class musicPlayer:
     def __init__(self, parent):

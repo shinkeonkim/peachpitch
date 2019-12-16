@@ -9,8 +9,11 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtMultimedia import QAudioProbe, QMediaPlayer, QMediaPlaylist, QMediaContent
 from PyQt5.QtMultimediaWidgets import QVideoWidget
-
+from bs4 import BeautifulSoup
+import requests
 import peach_controller as pcontroller
+
+import peach_model as pmodel
 
 pData = pcontroller.peachData()
 billboardChartDict = {}
@@ -18,6 +21,7 @@ soundseaChartDict = {}
 directoryMusicDict = {}
 selectedMusicDict = {}
 playlist = []
+searchResultLinkList = []
 
 class Window(QWidget):
     def __init__(self):
@@ -530,6 +534,8 @@ class subWindow(QWidget):
         
     def initVariable(self):
         self.imageDir = "../../img/"
+        self.conn = sqlite3.connect('music_database.db')
+        self.c = self.conn.cursor()
 
     def initUI(self):
         #확장 됬을때 self.vbox5
@@ -709,6 +715,8 @@ class subWindow(QWidget):
         self.webSearchingButton.setFixedSize(30, 30)
         self.webSearchingButton.setIcon(QIcon(self.imageDir + 'magnifying-glass.png'))
 
+        self.webSearchingButton.clicked.connect(self.searchClicked)
+
         self.thbox3.addWidget(self.webSearchingTitle)
         self.thbox3.addWidget(self.webSearchingTitleInput)
 
@@ -735,12 +743,48 @@ class subWindow(QWidget):
         background-color: rgb(128,128,255);
         }
         """)
+        self.webSearchView.itemDoubleClicked.connect(self.webSearchDownload)
 
         self.tvbox3.addWidget(self.webSearchView)
 
         self.searchingTab.setLayout(self.tvbox3)
 
         self.setLayout(self.vbox5)
+
+    def webSearchDownload(self):
+        i = self.webSearchView.currentRow()
+        print(pData.getPath())
+        downloader = pmodel.searchTube(pData.getPath(),self.webSearchingArtistInput.text(),self.webSearchingTitleInput.text(),searchResultLinkList[i])
+        print("test",self.webSearchingArtistInput.text(),self.webSearchingTitleInput.text())
+        print(searchResultLinkList[i])
+        
+        h = hashlib.sha1()
+        h.update((self.webSearchingTitleInput.text() +" "+self.webSearchingArtistInput.text()).encode('utf-8'))
+        filename =  h.hexdigest() + ".mp3"
+        self.c.execute('''INSERT INTO directory_music (song_name, artist_name, file_name, created_at) VALUES (?,?,?,DATETIME(\'NOW\'));''',(self.webSearchingTitleInput.text(),self.webSearchingArtistInput.text(),str(filename)))
+        self.conn.commit()
+        downloader.start()
+
+    def searchClicked(self):
+        if self.webSearchingArtistInput.text() == "" or self.webSearchingTitleInput.text() == "":
+            pass
+        self.webSearchView.clear()
+        link = 'https://www.youtube.com/results?search_query='
+        link = link + "'"+self.webSearchingArtistInput.text()+"'"+ "+" + "'"+self.webSearchingTitleInput.text()+"'"
+        req = requests.get(link)
+        html = req.text
+        soup = BeautifulSoup(html, 'html.parser')
+
+        try:
+            resultLink = soup.select(
+                'h3 > a'
+            )
+            L = [(i.text, i['href']) for i in resultLink][:36]
+            for i in L:
+                self.webSearchView.addItem(i[0])
+                searchResultLinkList.append("https://www.youtube.com"+i[1])
+        except:
+            print("seachError"+link)
 
     def selectedListUpdate(self):
         title = self.sender().currentItem().getSongName()

@@ -187,6 +187,32 @@ class peachTube(threading.Thread):
             print("Download Error")
         else:
             new_filename = self.filename
+            subprocess.Popen(['ffmpeg', '-i', parent_dir + default_filename, parent_dir2 + new_filename])
+
+class searchTube(threading.Thread):
+    def __init__(self,directory_path,artist,title,searchlink):
+        threading.Thread.__init__(self)
+        self.directory_path = directory_path
+        self.artist = artist
+        self.title = title
+        self.searchlink = searchlink
+        h = hashlib.sha1()
+        h.update((self.title +" "+self.artist).encode('utf-8'))
+        self.filename =  h.hexdigest() + ".mp3"
+
+    def run(self):
+        try:
+            yt = pytube.YouTube(self.searchlink)
+            parent_dir = self.directory_path+"/video/"
+            parent_dir2 = self.directory_path+"/audio/"
+            print(parent_dir,parent_dir2)
+            vids = yt.streams.filter(mime_type = "video/mp4").first()
+        except:
+            print("Download Error!")
+        else:
+            default_filename = vids.default_filename
+            vids.download(parent_dir)
+            new_filename = self.filename
             subprocess.Popen(['ffmpeg', '-i', parent_dir + default_filename, parent_dir2 + new_filename],shell=False)
 
 if __name__ == "__main__":
