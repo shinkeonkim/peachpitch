@@ -166,7 +166,7 @@ class peachTube(threading.Thread):
             yt = pytube.YouTube(self.searchSong())
             parent_dir = self.directory_path+"/video/"
             parent_dir2 = self.directory_path+"/audio/"
-            #print(parent_dir,parent_dir2)
+            print(parent_dir,parent_dir2)
             vids = yt.streams.filter(mime_type = "video/mp4").first()
             default_filename = vids.default_filename
             vids.download(parent_dir)

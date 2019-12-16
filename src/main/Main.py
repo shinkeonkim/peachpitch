@@ -42,6 +42,7 @@ class Window(QWidget):
         self.createPlaylist
         self.cnt = 0
         self.mediaPlayer = QMediaPlayer(None, QMediaPlayer.VideoSurface)
+        self.mediaPlayer.mediaStatusChanged.connect(self.mediaPlayerStatusChanged)
         self.initVariable()
         self.initUI()
 
@@ -112,12 +113,12 @@ class Window(QWidget):
         self.mediaPlayer.setVideoOutput(videoWidget)
 
         #슬라이더
-        playSlider = QSlider()
-        playSlider.setOrientation(Qt.Horizontal)
-        playSlider.setMinimum(0)
-        playSlider.setMaximum(1000)
-        playSlider.setValue(0)
-        playSlider.setStyleSheet("""
+        self.playslider = QSlider()
+        self.playslider.setOrientation(Qt.Horizontal)
+        self.playslider.setMinimum(0)
+        self.playslider.setMaximum(1000)
+        self.playslider.setValue(0)
+        self.playslider.setStyleSheet("""
         QSlider::groove:horizontal {
             background: white;
             height: 40px;
@@ -148,7 +149,7 @@ class Window(QWidget):
 
         #동영상용 임시 버튼
         vbox1.addWidget(videoWidget)
-        vbox1.addWidget(playSlider)
+        vbox1.addWidget(self.playslider)
         
         #재생버튼들이랑 볼륨 설정 나눌 hbox2
         hbox2 = QHBoxLayout()
@@ -317,8 +318,24 @@ class Window(QWidget):
         self.hbox1.addLayout(vbox4)
         mainbox.addLayout(self.hbox1)
 
+        self.player.getPlayer().positionChanged.connect(self.positionChanged)
+        self.player.getPlayer().durationChanged.connect(self.durationChanged)
+        self.mediaPlayer.error.connect(self.handleError)
+        self.playslider.sliderMoved.connect(self.setPosition)
         #메인 설정
         self.setLayout(mainbox)
+
+    def positionChanged(self, position):
+        self.playslider.setValue(position)
+
+    def durationChanged(self, duration):
+        self.playslider.setRange(0, duration)
+
+    def setPosition(self, position):
+        self.player.getPlayer().setPosition(position)
+
+    def handleError(self):
+        self.statusBar.showMessage("Error: " + self.player.getPlayer().errorString())
 
     # 창을 옮긴다.
     def mousePressEvent(self, event):
@@ -380,9 +397,12 @@ class Window(QWidget):
     def currentMusicListItemDoubleClicked(self):
         # print(playlist)
         self.mediaPlayer.play()
+        
         # print(self.currentMusicList.currentRow())
         if len(playlist) >0:
             self.player.play(playlist, self.currentMusicList.currentRow(), self.playOption)
+        self.cnt = 1
+        self.pausePlayButton.setText({True: "❚❚", False: "▶"}[self.cnt])
 
     def sliderMoved(self):
         self.volumeValue.setText(str(self.volumeSlider.value()))
@@ -420,6 +440,10 @@ class Window(QWidget):
     
     def next(self):
         self.player.next()
+
+    def mediaPlayerStatusChanged(self):
+        if self.mediaPlayer.mediaStatus() == 7:
+            self.mediaPlayer.play()
 
 class subWindow(QWidget): 
 
@@ -618,7 +642,7 @@ class subWindow(QWidget):
             # 리스트에 위젯 넣기
             self.myFileList.addItem(item)
             self.myFileList.setItemWidget(item, widget)
-
+    
 
 class musicItem(QListWidgetItem):
     def __init__(self, songName, artistName, widget):
