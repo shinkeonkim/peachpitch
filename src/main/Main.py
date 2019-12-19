@@ -22,6 +22,7 @@ directoryMusicDict = {}
 selectedMusicDict = {}
 playlist = []
 searchResultLinkList = []
+searchResultLinkListbackup = []
 
 class Window(QWidget):
     def __init__(self):
@@ -752,6 +753,7 @@ class subWindow(QWidget):
         self.setLayout(self.vbox5)
 
     def webSearchDownload(self):
+        global searchResultLinkList
         i = self.webSearchView.currentRow()
         print(pData.getPath())
         downloader = pmodel.searchTube(pData.getPath(),self.webSearchingArtistInput.text(),self.webSearchingTitleInput.text(),searchResultLinkList[i])
@@ -766,9 +768,11 @@ class subWindow(QWidget):
         downloader.start()
 
     def searchClicked(self):
+        global searchResultLinkList
         if self.webSearchingArtistInput.text() == "" or self.webSearchingTitleInput.text() == "":
             pass
         self.webSearchView.clear()
+        searchResultLinkList = []
         link = 'https://www.youtube.com/results?search_query='
         link = link + "'"+self.webSearchingArtistInput.text()+"'"+ "+" + "'"+self.webSearchingTitleInput.text()+"'"
         req = requests.get(link)
