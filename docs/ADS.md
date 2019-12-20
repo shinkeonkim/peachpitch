@@ -17,14 +17,37 @@
 
 |클래스|메서드|입력 인자|입력 인자 타입|출력 인자|출력 인자 타입|기능|
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|
-| mainWindow | \_\_init\_\_ 생성자 |  |  |  |  |  |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |
+| Window | \_\_init\_\_ 생성자 |  |  |  |  | pData, playlist, billboardChartDict, soundseaChartDict, directoryMusicDict, selectedMusicDict 선언|
+| -- |initVariable  |  |  |  |  |  |
+| -- | initUI |  |  |  |  | 사용자에게 UI의 모습을 보여줌 |
+| -- | boxdelete | layout, box | layout |  |  | **layout의 모든 아이템과 layout을 지운다. |
+| -- | listdelete |  |  |  |  | ** |
+| -- | deleteItemsOfLayout | layout | layout |  |  | ** |
+| -- | itemClicked |  |  |  |  | ** |
+| -- | currentMusicListItemDoubleClicked |  |  |  |  | 현재음악리스트아이템을 더블클릭했을때 재생되게 한다. |
+| -- | sliderMoved |  |  |  |  | 현재 노래의 볼륨을 컨트롤 |
+| -- | changeImage |  |  |  |  | **재생 버튼을 누르면 재생 일시정지 이미지 바뀜 |
+| -- | updateMediaChanged | index | int |  |  | **현재 선택된걸 바꾼다? |
+| -- | prev |  |  |  |  | 이전 곡 재생 |
+| -- | next |  |  |  |  | 다음 곡 재생 |
+| -- | mediaPlayerStatusChanged |  |  |  |  | 동영상 종료됬을때 다시 재생하게 함 |
+| -- | getCurrentPlaying |  |  |  |  | ** |
+| -- | setCurrentPlaying | title, artist | str |  |  | 현재재생라벨에 제목하고 가수를 적는다. |
+| -- | settingWindowPopup |  |  |  |  | 설정창을 띄운다. |
+| -- | getEncodefilename | title, artist | str | ** |  | ** |
+| subWindow | \_\_init\_\_ 생성자 | billboardDict, soundseaDict, currentMusicList | ** |  |  | **directoryMusicDict선언 |
+| -- | initVariable |  |  |  |  | ** |
+| -- | initUI |  |  |  |  | 확장버튼을 눌렀을때 확장된 창의 모습을 보여줌 |
+| -- | webSearchDownload |  |  |  |  | ** |
+| -- | searchClicked |  |  |  |  | ** |
+| -- | selectedListUpdate |  |  |  |  | ** |
+| -- | getEncodefilename | title, artist |  |  |  | ** |
+| -- | refreshButton1Clicked |  |  |  |  | ** |
+| musicItem | \_\_init\_\_ | songName, artistName, widget |  |  |  | 리스트 아이템 추가 |
+| -- | getSongName |  |  |  |  | 곡 제목을 가져옴 |
+| -- | getArtistName |  |  |  |  | 가수 이름을 가져옴 |
+| settingWindow | \_\_init\_\_ |  |  |  |  | 윈도우 타이틀 아이콘 설정 |
+| -- | initUI |  |  |  |  | 설정창을 보여줌 |
 
 ### MODEL
 
