@@ -94,26 +94,29 @@
 |--| 이름 | 역할, 설명 | 
 |:--:|:--:|:--:|
 |attributes| | |
-|--|  |  |
-|--|  |  |
-|--|  |  |
+|--| self.imageDir | img 폴더 경로 지정  |
+|--| self.settingBox | && |
+|--| self.shbox1 | && |
+|--| self.sakeLLabel | && |
 |methods|  |  |
-|--|  |  |
-|--|  |  |
-|--|  |  |
+|--| \_\_init\_\_ | attribute 초기화, initUI 호출 |
+|--| initUI | UI 초기화 |
 
 ### musicItem
 
 |--| 이름 | 역할, 설명 | 
 |:--:|:--:|:--:|
 |attributes| | |
-|--|  |  |
-|--|  |  |
-|--|  |  |
+|--| self.songName | "제목: 노래 이름"의 text를 가진 QLabel|
+|--| self.artistName | "가수: 가수 이름"의 text를 가진 QLabel |
+|--| sender | sender 속성을 상속바다 쉐도잉한다. [songName, artistName]의 문자열을 담은 리스트 객체가 저장된다. |
+|--| vbox5 | && |
+|--| hbox8 | && |
+|--| hbox9 | && |
 |methods|  |  |
-|--|  |  |
-|--|  |  |
-|--|  |  |
+|--|\_\_init\_\_| attrubute 초기화, UI  초기화|
+|--| getSongName | "제목: " 문자열을 제외한 노래 제목 문자열 return |
+|--| getArtistName | "가수: "문자열을 제외한 노래 제목 문자열 return |
 
 ## peach_controller.py
 
