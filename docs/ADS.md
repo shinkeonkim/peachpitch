@@ -7,9 +7,13 @@
 | -- | subWindow | UI중 확장됬을때의 부분 |
 | -- | musicItem | 리스트에 넣을 item들 |
 | -- | settingWindow | 설정창 |
-|  |  |  |
-|  |  |  |
-
+| peach_controller  | peachData  | 모든 음악 정보, 설정 관련 기능을 총괄함. |
+| -- | musicPlayer | 음악 재생 기능을 총괄함. 
+| peach_model | billboardChart | 빌보드 차트 정보와 관련된 model |
+|  | soundseaChart | 소리 바다 차트 정보와 관련된 model |
+|  | selectedMusicDict  | 사용자가 선택(다운)한 노래 관련 model |
+|  | peachTube | pytube를 이용해 아티스트, 노래 제목을 이용해 노래를 검색하고 mp4로 파일을 받고 mp3로 변환함. |
+| | searchTube | 사용자가 직접 지정한 문자열로 노래를 검색한 검색 결과를 다룸 |
 
 ## 클래스 설계
 
@@ -20,29 +24,29 @@
 | Window | \_\_init\_\_ 생성자 |  |  |  |  | pData, playlist, billboardChartDict, soundseaChartDict, directoryMusicDict, selectedMusicDict 선언|
 | -- |initVariable  |  |  |  |  |  |
 | -- | initUI |  |  |  |  | 사용자에게 UI의 모습을 보여줌 |
-| -- | boxdelete | layout, box | layout |  |  | **layout의 모든 아이템과 layout을 지운다. |
-| -- | listdelete |  |  |  |  | ** |
-| -- | deleteItemsOfLayout | layout | layout |  |  | ** |
-| -- | itemClicked |  |  |  |  | ** |
+| -- | boxdelete | layout, box | layout |  |  | layout내의 box를 지운다. |
+| -- | listdelete |  |  |  |  | 사용자의 플레이리스트에서 더블클릭된 아이템을 삭제한다. |
+| -- | deleteItemsOfLayout | layout | layout |  |  | 한 레이아웃에서 존재하는 아이템을 삭제하고 만약 아이템이 레이아웃이라면 재귀적으로 호출하여 삭제한다. |
+| -- | itemClicked |  |  |  |  | 차트에서 음악 정보가 더블클릭되었을 때, 노래를 다운로드한다. |
 | -- | currentMusicListItemDoubleClicked |  |  |  |  | 현재음악리스트아이템을 더블클릭했을때 재생되게 한다. |
 | -- | sliderMoved |  |  |  |  | 현재 노래의 볼륨을 컨트롤 |
-| -- | changeImage |  |  |  |  | **재생 버튼을 누르면 재생 일시정지 이미지 바뀜 |
-| -- | updateMediaChanged | index | int |  |  | **현재 선택된걸 바꾼다? |
+| -- | changeImage |  |  |  |  | 재생 버튼을 누르면 재생 일시정지 이미지 바뀌고 현재 재생되는 노래의 정보를 갱신하고 화면의 재생 여부를 결정한다. |
+| -- | updateMediaChanged | index | int |  |  | 현재 선택된 노래로 재생한다. |
 | -- | prev |  |  |  |  | 이전 곡 재생 |
 | -- | next |  |  |  |  | 다음 곡 재생 |
 | -- | mediaPlayerStatusChanged |  |  |  |  | 동영상 종료됬을때 다시 재생하게 함 |
-| -- | getCurrentPlaying |  |  |  |  | ** |
+| -- | getCurrentPlaying |  |  |  |  | 현재 재생하고 있는 노래의 정보를 return 한다. |
 | -- | setCurrentPlaying | title, artist | str |  |  | 현재재생라벨에 제목하고 가수를 적는다. |
 | -- | settingWindowPopup |  |  |  |  | 설정창을 띄운다. |
-| -- | getEncodefilename | title, artist | str | ** |  | ** |
-| subWindow | \_\_init\_\_ 생성자 | billboardDict, soundseaDict, currentMusicList | ** |  |  | **directoryMusicDict선언 |
-| -- | initVariable |  |  |  |  | ** |
+| -- | getEncodefilename | title, artist | str | sha1str | str | path, title, artist를 이용해 파일의 이름을 암호화시킨 문자열을 return 한다. |
+| subWindow | \_\_init\_\_ 생성자 | billboardDict, soundseaDict, currentMusicList | dict |  |  | initVariable 호출, self.billboardDict, self.soundseaDict, self.currentMusicList에 각각 매개변수로 초기화 |
+| -- | initVariable |  |  |  |  | self.imageDir 초기화(이미지 저장된 디렉토리), self.conn, self.c 초기화|
 | -- | initUI |  |  |  |  | 확장버튼을 눌렀을때 확장된 창의 모습을 보여줌 |
-| -- | webSearchDownload |  |  |  |  | ** |
-| -- | searchClicked |  |  |  |  | ** |
-| -- | selectedListUpdate |  |  |  |  | ** |
-| -- | getEncodefilename | title, artist |  |  |  | ** |
-| -- | refreshButton1Clicked |  |  |  |  | ** |
+| -- | webSearchDownload |  |  |  |  | 웹 검색 결과에서 사용자가 선택한 영상을 다운로드하고 노래로 변환한다. 그리고 db에 노래 정보를 반영한다. |
+| -- | searchClicked |  |  |  |  | 웹 검색 결과에서 더블 클릭했을 때의 이벤트를 받아들이는 메서드이다 |
+| -- | selectedListUpdate |  |  |  |  | 다운로드된 음악 리스트에서 특정 아이템을 더블클릭하면 재생 목록으로 update(add)해준다. |
+| -- | getEncodefilename | title, artist | sha1str | str |  | path,title,artist를 이용해 암호화된 노래 파일 이름을 return 한다. |
+| -- | refreshButton1Clicked |  |  |  |  | 새로고침 버튼이 눌렸을때, db의 정보를 초기화하고 새로 directoryMusicDict의 정보를 반영한다. |
 | musicItem | \_\_init\_\_ | songName, artistName, widget |  |  |  | 리스트 아이템 추가 |
 | -- | getSongName |  |  |  |  | 곡 제목을 가져옴 |
 | -- | getArtistName |  |  |  |  | 가수 이름을 가져옴 |

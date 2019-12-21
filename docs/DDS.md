@@ -61,26 +61,47 @@
 |--| 이름 | 역할, 설명 |
 |:--:|:--:|:--:|
 |attributes| | |
-|--|  |  |
-|--|  |  |
-|--|  |  |
+|--| path | Main.py 혹은 peach_controller.py가 실행되는 디렉토리 정보 |
+|--| billBoardChart | peach_model의 billboardChart 객체이다.  |
+|--| soundseaChart | peach_model의 soundseaChart 객체이다. |
+|--| selectedMusic | peach_model의 selectedMusicDict 객체이다. |
+|--| directoryMusicDict | 디렉토리에 저장된 음악을 나열한 딕셔너리이다. |
+|--| conn | music_database.db 파일과 connect해주는 속성 |
+|--| c | connd의 cursor 속성 |
 |methods|  |  |
-|--|  |  |
-|--|  |  |
-|--|  |  |
+|--| \_\_init\_\_ | attributes들을 초기화한다. |
+|--| setPath | path를 임의로 주어진 문자열로 지정한다. |
+|--| getPath | path를 return한다. |
+|--| initChart | 모든 차트 정보의 db, 딕셔너리를 초기화한다. 그리고 선택한 음악 딕셔너리도 초기화한다.  |
+|--| initChartDict | 모든 차트 정보의 딕셔너리를 초기화한다. 그리고 선택한 음악 딕셔너리도 초기화한다. |
+|--| getBillboardChartDict | billBoardChart 객체의 getBillboardChartDict 메서드 결과를 return 한다. |
+|--| getSoundseaChartDict | soundseaChart 객체의 getSoundseaChartDict 메서드 결과를 return 한다. |
+|--| getSelectedMusicDict | selectedMusicDict 객체의 getSelectedMusicDict 메서드 결과를 return 한다. |
+|--| getSelectedMusicPlaylist | selectedMusic 객체의 getSelectedMusicDict 메서드의 결과를 이용해 암호화된 파일 이름을 나열한 list  |
+|--| updateSelectedMusicDict |  |
+|--| initDirectory |  |
+|--| getDirectoryMusicDict |  |
+|--| downloadMusic |  |
 
 ### musicPlayer
 
 |--| 이름 | 역할, 설명 | 
 |:--:|:--:|:--:|
 |attributes| | |
-|--|  |  |
-|--|  |  |
-|--|  |  |
+|--| player | QMediaPlayer() 객체이고 노래을 재생시킬 때 사용한다. |
+|--| playlist | QMediaPlayList() 객체이고 노래 재생 목록 관련 객체이다.  |
 |methods|  |  |
-|--|  |  |
-|--|  |  |
-|--|  |  |
+|--| \_\_init\_\_ | |
+|--| getPlayer |  |
+|--| play |  |
+|--| pause |  |
+|--| stop |  |
+|--| prev |  |
+|--| next |  |
+|--| createPlaylist |  |
+|--| updatePlayMode |  |
+|--| updateVolume |  |
+|--| mediaChanged |  |
 
 ## peach_model.py
 
