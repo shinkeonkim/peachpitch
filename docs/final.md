@@ -249,52 +249,34 @@ DDS.md
 
 ## 구현 내용
 
-### 1. 메인 화면
+### 1. UI구성된 BOX들
 
-<img src = "../img/이미지 이름.jpg">
+<img src = "../img/mainbox.png">
+<img src = "../img/addbox.png">
+<img src = "../img/setbox.png">
 
-```
-description
-```
+### 2. 메인 화면
 
-### 2. 확장된 메인 화면
+<img src = "../img/Window.png">
 
-<img src = "../img/이미지 이름.jpg">
+### 3. 확장된 메인 화면
 
-```
-description
-```
+<img src = "../img/addWindow.png">
 
-### 3. 빌보드 차트, 한국차트 기능
+### 4. 빌보드 차트, 한국차트 기
 
-<img src = "../img/이미지 이름.jpg">
-<img src = "../img/이미지 이름.jpg">
+<img src = "../img/billboardchart.png">
+<img src = "../img/koreanchart.png">
 
-```
-description
-```
+### 5. 검색 기능
+<img src = "../img/searching.png">
 
-### 4. 검색 기능
-<img src = "../img/이미지 이름.jpg">
+### 6. 재생 목록
 
-```
-description
-```
+<img src = "../img/musiclist.png">
 
-### 5. 재생 목록
-
-<img src = "../img/이미지 이름.jpg">
-
-```
-description
-```
-
-### 6. 설정창
-<img src = "../img/이미지 이름.jpg">
-
-```
-description
-```
+### 7. 설정창
+<img src = "../img/settingwindow.jpg">
 
 ## 느낀점
 ### 김신건
