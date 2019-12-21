@@ -6,14 +6,75 @@
 
 |--| 이름 | 역할, 설명 | 
 |:--:|:--:|:--:|
-|attributes| | |
-|--|  |  |
-|--|  |  |
-|--|  |  |
-|methods|  |  |
-|--|  |  |
-|--|  |  |
-|--|  |  |
+|attributes| pData | ** |
+|--| playlist | ** |
+|--| billboardChartDict | ** |
+|--| soundseaChartDict | ** |
+|--| directoryMusicDict | ** |
+|--| selectedMusicDict | ** |
+|--| self.conn | ** |
+|--| self.c | ** |
+|--| self.player | ** |
+|--| self.playOption | ** |
+|--| self.mediaPlayer | ** |
+|--| self.imageDir | 이미지 경로를 설정한다. |
+|--| mainbox | UI의 메인부분을 담당한다. |
+|--| titlebox | 타이틀 부분을 담당한다. |
+|--| peachImage | 피치의 로고 위치를 담당한다. |
+|--| pixmap | 피치로고를 지정한다. |
+|--| minimizeButton | 최소화 버튼이다. |
+|--| closeButton | 닫기 버튼이다. |
+|--| self.hbox1 | 재생부분과 리스트 부분을 구분짓는다. |
+|--| vbox1 | 노래를 재생하면 나오는 영상이랑 재생버튼이 있는 레이아웃이다. |
+|--| videoWidget | 노래를 재생하면 나오는 영상 객체이다. |
+|--| self.playslider | 재생바의 객체이다. |
+|--| hbox2 | 재생버튼이랑 볼륨 설정을 나눌 레이아웃이다. |
+|--| hbox3 | 재생버튼들을 나눌 레이아웃이다. |
+|--| prevSongButton | 이전 노래 버튼이다. |
+|--| nextSongButton | 다음 노래 버튼이다. |
+|--| self.pausePlayButton | 재생 버튼이다. |
+|--| hbox4 | 볼륨설정이랑 설정 버튼이 있는 레이아웃이다. |
+|--| vbox2 | 볼륨설정이 있는 레이아웃이다. |
+|--| hbolumeValue | 볼륨의 value를 알려주는 레이아웃이다. |
+|--| self.volumeSlider | 볼륨 다이얼이다. |
+|--| self.volumeValue | 볼륨의 value를 알려주는 레이아웃이다. |
+|--| vbox3 |  |
+|--| speedList |  |
+|--| self.speedCombobox |  |
+|--| hbox5 |  |
+|--| self.settingButton |  |
+|--| vbox4 |  |
+|--| hbox6 |  |
+|--| self.currentPlayingLabel |  |
+|--| self.currentMusicList |  |
+|--| hbox7 |  |
+|--| deleteButton |  |
+|--| menuButton |  |
+|--| self.vbox5 |  |
+|methods| speedComboboxCurrnetIndexChangedEvent |  |
+|--| positionChanged |  |
+|--| durationChanged |  |
+|--| setPosition |  |
+|--| handleError |  |
+|--| mousePressEvent |  |
+|--| mouseMoveEvent |  |
+|--| expandWindow1 |  |
+|--| boxdelete |  |
+|--| listdelete |  |
+|--| deleteItemsOfLayout |  |
+|--| itemClicked |  |
+|--| currentMusicListItemDoubleClicked |  |
+|--| sliderMoved |  |
+|--| changeImage |  |
+|--| updateMediaChanged |  |
+|--| prev |  |
+|--| next |  |
+|--| mediaPlayerStatusChanged |  |
+|--| getCurrentPlaying |  |
+|--| setCurrentPlaying |  |
+|--| settingWindowPopup |  |
+|--| getEncodefilename |  |
+
 
 ### subWindow
 
