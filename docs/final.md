@@ -249,15 +249,51 @@ DDS.md
 
 ## 구현 내용
 
-### View
+### 1. 메인 화면
+
+<img src = "../img/이미지 이름.jpg">
 
 ```
-
+description
 ```
 
-### Model
+### 2. 확장된 메인 화면
+
+<img src = "../img/이미지 이름.jpg">
+
+```
+description
 ```
 
+### 3. 빌보드 차트, 한국차트 기능
+
+<img src = "../img/이미지 이름.jpg">
+<img src = "../img/이미지 이름.jpg">
+
+```
+description
+```
+
+### 4. 검색 기능
+<img src = "../img/이미지 이름.jpg">
+
+```
+description
+```
+
+### 5. 재생 목록
+
+<img src = "../img/이미지 이름.jpg">
+
+```
+description
+```
+
+### 6. 설정창
+<img src = "../img/이미지 이름.jpg">
+
+```
+description
 ```
 
 ## 느낀점
