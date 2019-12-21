@@ -80,14 +80,35 @@
 
 |--| 이름 | 역할, 설명 | 
 |:--:|:--:|:--:|
-|attributes| | |
-|--|  |  |
-|--|  |  |
-|--|  |  |
-|methods|  |  |
-|--|  |  |
-|--|  |  |
-|--|  |  |
+|attributes| self.vbox5 | 확장된 창의 메인 레이아웃이다. |
+|--| self.tabs | 탭을 만든다. |
+|--| self.myFileTab | 탭의 요소를 담당한다. |
+|--| self.rankListTab | 탭의 요소를 담당한다. |
+|--| self.searchingTab | 탭의 요소를 담당한다. |
+|--| self.tvbox1 | 파일탭뷰 안에서의 레이아웃이다. |
+|--| self.thbox1 | 검색할 수 있는 위젯을 넣는 레이아웃이다. |
+|--| self.refreshButton1 | 새로고침 버튼이다. |
+|--| self.myFileSearchInput | 검색할 수 있는 검색창이다. |
+|--| self.myFileSearchButton | 검색 할 수 있는 검색창의 버튼이다. |
+|--| self.myFileList | 내 파일의 리스트이다. |
+|--| self.tvbox2 | 랭킹 탭뷰 안에서의 레이아웃이다. |
+|--| self.thbox2 | 빈공간을 주기 위한 레이아웃이다. |
+|--| self.rankTab | 랭킹들이 나오는 탭이다. |
+|--| billboardList | 랭킹 탭 안의 빌보드 리스트이다. |
+|--| koreanRankList | 랭킹 탭 안의 한국 리스트이다. |
+|--| self.nullSpace | 빈공간이다. |
+|--| self.tvbox3 | 검색 탭뷰 안에서의 레이아웃이다. |
+|--| self.thbox3 | 제목을 넣을 수 있는 레이아웃이다. |
+|--| self.thbox4 | 가수를 넣을 수 있는 레이아웃이다. |
+|--| self.webSearchingTitleInput | 제목을 넣는 검색창이다. |
+|--| self.webSearchingArtistInput | 가수를 넣는 검색창이다. |
+|--| self.webSearchingButton | 검색하는 버튼이다. |
+|--| self.webSearchView | 검색 결과가 나오는 리스트이다. |
+|methods| webSearchDownload | **웹에서 검색한 것을 다운로드 한다. |
+|--| searchClicked | **검색한 것을 누르면 나오냐??????? |
+|--| selectedListUpdate | **선택한 것을 현재 재생목록에 추가한다. |
+|--| getEncodefilename | ** |
+|--| refreshButton1Clicked | **새로고침을 누르면 내 파일의 목록을 바꾼다. |
 
 ### settingWindow
 
@@ -95,9 +116,9 @@
 |:--:|:--:|:--:|
 |attributes| | |
 |--| self.imageDir | img 폴더 경로 지정  |
-|--| self.settingBox | && |
-|--| self.shbox1 | && |
-|--| self.sakeLLabel | && |
+|--| self.settingBox | 설정창의 레이아웃이다. |
+|--| self.shbox1 | 설정창 목록의 레이아웃이다. |
+|--| self.sakeLLabel | 설정창의 내용이다. |
 |methods|  |  |
 |--| \_\_init\_\_ | attribute 초기화, initUI 호출 |
 |--| initUI | UI 초기화 |
@@ -110,9 +131,9 @@
 |--| self.songName | "제목: 노래 이름"의 text를 가진 QLabel|
 |--| self.artistName | "가수: 가수 이름"의 text를 가진 QLabel |
 |--| sender | sender 속성을 상속바다 쉐도잉한다. [songName, artistName]의 문자열을 담은 리스트 객체가 저장된다. |
-|--| vbox5 | && |
-|--| hbox8 | && |
-|--| hbox9 | && |
+|--| vbox5 | 리스트 아이템에서의 레이아웃이다. |
+|--| hbox8 | 리스트 아이템에서의 제목 레이아웃이다. |
+|--| hbox9 | 리스트 아이템에서의 가수 레이아웃이다. |
 |methods|  |  |
 |--|\_\_init\_\_| attrubute 초기화, UI  초기화|
 |--| getSongName | "제목: " 문자열을 제외한 노래 제목 문자열 return |
