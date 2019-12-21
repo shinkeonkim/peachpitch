@@ -78,10 +78,10 @@
 |--| getSoundseaChartDict | soundseaChart 객체의 getSoundseaChartDict 메서드 결과를 return 한다. |
 |--| getSelectedMusicDict | selectedMusicDict 객체의 getSelectedMusicDict 메서드 결과를 return 한다. |
 |--| getSelectedMusicPlaylist | selectedMusic 객체의 getSelectedMusicDict 메서드의 결과를 이용해 암호화된 파일 이름을 나열한 list  |
-|--| updateSelectedMusicDict |  |
-|--| initDirectory |  |
-|--| getDirectoryMusicDict |  |
-|--| downloadMusic |  |
+|--| updateSelectedMusicDict | 매개변수로 들어오는 dict에 노래를 추가한다. |
+|--| initDirectory | 디렉토리에 있는 음악 파일의 정보를 db에서 정보를 얻어와 slef.directoryMusicDict를 갱신한다. |
+|--| getDirectoryMusicDict |self.directoryMusicDict를 return 한다. |
+|--| downloadMusic | artist와 song을 파라미터로 받아 peachtube 객체를 선언하고 start() 메서드를 실행한다.  |
 
 ### musicPlayer
 
@@ -91,17 +91,17 @@
 |--| player | QMediaPlayer() 객체이고 노래을 재생시킬 때 사용한다. |
 |--| playlist | QMediaPlayList() 객체이고 노래 재생 목록 관련 객체이다.  |
 |methods|  |  |
-|--| \_\_init\_\_ | |
-|--| getPlayer |  |
-|--| play |  |
-|--| pause |  |
-|--| stop |  |
-|--| prev |  |
-|--| next |  |
-|--| createPlaylist |  |
-|--| updatePlayMode |  |
-|--| updateVolume |  |
-|--| mediaChanged |  |
+|--| \_\_init\_\_ | attribute 초기화 |
+|--| getPlayer | self.player 를 return함. |
+|--| play | playlist와 시작점을 파라미터로 받아서 playlist에서 시작점부터 재생하도록 한다. |
+|--| pause | 노래 일시정지 |
+|--| stop | 노래 정지 |
+|--| prev | 이전 노래로 이동 |
+|--| next | 다음 노래로 이동 |
+|--| createPlaylist | playlist 새로 갱신하기 위한 메서드 |
+|--| updatePlayMode | 베속을 조절하는 메서드 |
+|--| updateVolume | 볼륨을 갱신한다. |
+|--| mediaChanged |  부모의 updateMediaChanged로 플레이리스트의 현재 재생중인 index를 전달한다. |
 
 ## peach_model.py
 
