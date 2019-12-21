@@ -6,17 +6,17 @@
 
 |--| 이름 | 역할, 설명 | 
 |:--:|:--:|:--:|
-|attributes| pData | ** |
-|--| playlist | ** |
-|--| billboardChartDict | ** |
-|--| soundseaChartDict | ** |
-|--| directoryMusicDict | ** |
-|--| selectedMusicDict | ** |
-|--| self.conn | ** |
-|--| self.c | ** |
-|--| self.player | ** |
-|--| self.playOption | ** |
-|--| self.mediaPlayer | ** |
+|attributes| pData | peach_controller의 peachData 클래스의 객체 |
+|--| playlist | 재생해야 할 노래의 목록 |
+|--| billboardChartDict | billboardChart 노래를 담아두는 딕셔너리 |
+|--| soundseaChartDict | 소리바다 차트 노래를 담아두는 딕셔너리 |
+|--| directoryMusicDict | 디렉토리에 다운로드받은 노래 목록을 담아두는 딕셔너리 |
+|--| selectedMusicDict | 재생목록에 선택된 노래 목록 |
+|--| conn | music_database.db 파일과 connect해주는 속성 |
+|--| c | connd의 cursor 속성 |
+|--| self.player | peach_controller의 musicPlayer 객체 |
+|--| self.playOption | 노래를 재생하는 옵션을 결졍하는 속성 |
+|--| self.mediaPlayer | 비디오를 재생시키는 QMediaPlayer 객체 |
 |--| self.imageDir | 이미지 경로를 설정한다. |
 |--| mainbox | UI의 메인부분을 담당한다. |
 |--| titlebox | 타이틀 부분을 담당한다. |
@@ -51,29 +51,30 @@
 |--| deleteButton | 현재 재생목록의 노래를 삭제하는 버튼이다. |
 |--| menuButton | 내 파일과 랭킹 탭을 볼 수있는 창을 확장 시키는 버튼이다. |
 |--| self.vbox5 | 확장 되었을 때의 레이아웃이다. |
-|methods| speedComboboxCurrnetIndexChangedEvent | 노래의 속도를 조절한다. |
-|--| positionChanged | ** |
-|--| durationChanged | ** |
-|--| setPosition | ** |
-|--| handleError | ** |
+|methods| | |
+|--|speedComboboxCurrnetIndexChangedEvent | 노래의 속도를 조절한다. |
+|--| positionChanged |  노래가 재생될 때, playerSlider의 바또한 진행한다. |
+|--| durationChanged | playerSlide의 범위를 노래의 길이로 조정한다. |
+|--| setPosition | playerSlider가 움직이면 player의 position을 조정한다. |
+|--| handleError | 에러가 난 경우 에러메시지를 출력한다. |
 |--| mousePressEvent | 창을 누르는 위치를 조절한다. |
 |--| mouseMoveEvent | 창을 누르는 위치 조절과 창을 움직일 수 있게 한다. |
 |--| expandWindow1 | 창을 확장시킨다. |
 |--| boxdelete | 확장된 창을 삭제한다. |
-|--| listdelete | ** |
-|--| deleteItemsOfLayout | ** |
-|--| itemClicked | ** |
-|--| currentMusicListItemDoubleClicked | ** |
+|--| listdelete | 선택된 노래를 재생목록에서 삭제한다. |
+|--| deleteItemsOfLayout | layout에 들어있는 item들 모두 삭제한다. 만약 item이 아닌 layout인 경우 재귀적으로 호출해 안에 있는 item을 계속 지워나간다.|
+|--| itemClicked | 버튼이 클릭됬을때, 노래를 다운로드한다. |
+|--| currentMusicListItemDoubleClicked | 재생목록 노래에서 특정 노래가 더블클릭되었을때, 기존 노래를 정지하고 노래를 클릭된 노래로 재생한다.|
 |--| sliderMoved | 재생바의 움직임을 담당한다. |
 |--| changeImage | 재생 아이콘과 일시정지 아이콘을 바꾼다. |
-|--| updateMediaChanged | ** |
+|--| updateMediaChanged | 노래 목록을 갱신시킨다. |
 |--| prev | 이전 노래로 바꾸게 한다. |
 |--| next | 다음 노래로 바꾸게 한다. |
 |--| mediaPlayerStatusChanged | 재생하면 나오는 영상이 멈췄을때 다시 틀게 한다. |
 |--| getCurrentPlaying | 현재 재생하고 있는 노래의 라벨을 가져온다. |
 |--| setCurrentPlaying | 현재 재생하고 있는 노래의 라벨을 바꾼다. |
 |--| settingWindowPopup | 설정창이 뜨게 한다. |
-|--| getEncodefilename | ** |
+|--| getEncodefilename | directory, artsit, title을 이용해 암호화된 sha1문자열을 만들어 return한다. |
 
 
 ### subWindow
