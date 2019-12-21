@@ -105,11 +105,11 @@
 |--| self.webSearchingArtistInput | 가수를 넣는 검색창이다. |
 |--| self.webSearchingButton | 검색하는 버튼이다. |
 |--| self.webSearchView | 검색 결과가 나오는 리스트이다. |
-|methods| webSearchDownload | **웹에서 검색한 것을 다운로드 한다. |
-|--| searchClicked | **검색한 것을 누르면 나오냐??????? |
-|--| selectedListUpdate | **선택한 것을 현재 재생목록에 추가한다. |
-|--| getEncodefilename | ** |
-|--| refreshButton1Clicked | **새로고침을 누르면 내 파일의 목록을 바꾼다. |
+|methods| webSearchDownload | 웹에서 검색한 것을 다운로드 한다. |
+|--| searchClicked | 검색한 검색 결과를 list에 반영한다. |
+|--| selectedListUpdate | 선택한 것을 현재 재생목록에 추가한다. |
+|--| getEncodefilename | directory, artsit, title을 이용해 암호화된 sha1문자열을 만들어 return한다. |
+|--| refreshButton1Clicked | 새로고침을 누르면 내 파일의 목록을 바꾼다. |
 
 ### settingWindow
 
