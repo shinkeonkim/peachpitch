@@ -540,7 +540,7 @@ pyqt를 이용한 뮤직 플레이어, peachpitch
 <img src = "../img/musiclist.png">
 
 ### 7. 설정창
-<img src = "../img/settingwindow.jpg">
+<img src = "../img/settingwindow.PNG">
 
 ## 느낀점
 ### 김신건
