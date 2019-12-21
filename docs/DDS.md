@@ -38,42 +38,42 @@
 |--| hbolumeValue | 볼륨의 value를 알려주는 레이아웃이다. |
 |--| self.volumeSlider | 볼륨 다이얼이다. |
 |--| self.volumeValue | 볼륨의 value를 알려주는 레이아웃이다. |
-|--| vbox3 |  |
-|--| speedList |  |
-|--| self.speedCombobox |  |
-|--| hbox5 |  |
-|--| self.settingButton |  |
-|--| vbox4 |  |
-|--| hbox6 |  |
-|--| self.currentPlayingLabel |  |
-|--| self.currentMusicList |  |
-|--| hbox7 |  |
-|--| deleteButton |  |
-|--| menuButton |  |
-|--| self.vbox5 |  |
-|methods| speedComboboxCurrnetIndexChangedEvent |  |
-|--| positionChanged |  |
-|--| durationChanged |  |
-|--| setPosition |  |
-|--| handleError |  |
-|--| mousePressEvent |  |
-|--| mouseMoveEvent |  |
-|--| expandWindow1 |  |
-|--| boxdelete |  |
-|--| listdelete |  |
-|--| deleteItemsOfLayout |  |
-|--| itemClicked |  |
-|--| currentMusicListItemDoubleClicked |  |
-|--| sliderMoved |  |
-|--| changeImage |  |
-|--| updateMediaChanged |  |
-|--| prev |  |
-|--| next |  |
-|--| mediaPlayerStatusChanged |  |
-|--| getCurrentPlaying |  |
-|--| setCurrentPlaying |  |
-|--| settingWindowPopup |  |
-|--| getEncodefilename |  |
+|--| vbox3 | 설정버튼이랑 속도조절이 있는 레이아웃이다. |
+|--| speedList | 속도 조절 목록의 리스트이다. |
+|--| self.speedCombobox | 속도 조절할 콤보박스이다. |
+|--| hbox5 | 설정버튼을 가운데에 놓기 위한 레이아웃이다. |
+|--| self.settingButton | 설정버튼이다. |
+|--| vbox4 | 현재 재생목록 리스트랑 확장버튼이 있는 레이아웃이다. |
+|--| hbox6 | 현재 재생목록 리스트를 넣은 레이아웃이다. |
+|--| self.currentPlayingLabel | 현재 재생하고 있는 노래의 정보를 알려주는 라벨이다. |
+|--| self.currentMusicList | 현재 재생목록 리스트이다. |
+|--| hbox7 | 확장버튼이랑 삭제 버튼이 있는 레이아웃이다. |
+|--| deleteButton | 현재 재생목록의 노래를 삭제하는 버튼이다. |
+|--| menuButton | 내 파일과 랭킹 탭을 볼 수있는 창을 확장 시키는 버튼이다. |
+|--| self.vbox5 | 확장 되었을 때의 레이아웃이다. |
+|methods| speedComboboxCurrnetIndexChangedEvent | 노래의 속도를 조절한다. |
+|--| positionChanged | ** |
+|--| durationChanged | ** |
+|--| setPosition | ** |
+|--| handleError | ** |
+|--| mousePressEvent | 창을 누르는 위치를 조절한다. |
+|--| mouseMoveEvent | 창을 누르는 위치 조절과 창을 움직일 수 있게 한다. |
+|--| expandWindow1 | 창을 확장시킨다. |
+|--| boxdelete | 확장된 창을 삭제한다. |
+|--| listdelete | ** |
+|--| deleteItemsOfLayout | ** |
+|--| itemClicked | ** |
+|--| currentMusicListItemDoubleClicked | ** |
+|--| sliderMoved | 재생바의 움직임을 담당한다. |
+|--| changeImage | 재생 아이콘과 일시정지 아이콘을 바꾼다. |
+|--| updateMediaChanged | ** |
+|--| prev | 이전 노래로 바꾸게 한다. |
+|--| next | 다음 노래로 바꾸게 한다. |
+|--| mediaPlayerStatusChanged | 재생하면 나오는 영상이 멈췄을때 다시 틀게 한다. |
+|--| getCurrentPlaying | 현재 재생하고 있는 노래의 라벨을 가져온다. |
+|--| setCurrentPlaying | 현재 재생하고 있는 노래의 라벨을 바꾼다. |
+|--| settingWindowPopup | 설정창이 뜨게 한다. |
+|--| getEncodefilename | ** |
 
 
 ### subWindow
