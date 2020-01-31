@@ -35,8 +35,12 @@ pyqt를 이용한 뮤직 플레이어, peach :peach: pitch :musical_note:
 복숭아를 나타내는 peach와 음높이를 나타내는 pitch를 합친 말이며, 
 복숭아 음악 플레이어를 의미합니다. :smile:
 
-## 제작 동기
+### 제작 동기
 음악이란 것은 실생활에서 정말 많은 곳에서 경험하는 매체입니다. 이런 매체를 재생하는 것은 음악 플레이어입니다. 한번 실생활에서 많이 접하고 사용하는 음악플레이어를 국민대학교 1학년 2학기, 소프트웨어 프로젝트 강의에서 배운 PYQT를 활용해 제작해보자는 생각을 하게 되었고 바로 실행으로 옮기게 되었습니다.
+
+## 실행 영상 📺
+
+[![peachpitch 실행 영상](https://img.youtube.com/vi/IWfEA6DgcdA/0.jpg)](https://www.youtube.com/watch?v=IWfEA6DgcdA)
 
 ## 실행방법
 ### python shell 실행 방법
