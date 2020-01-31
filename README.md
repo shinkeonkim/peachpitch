@@ -4,7 +4,6 @@
     <img src = "https://img.shields.io/github/issues/shinkeonkim/peachpitch">
     <img src = "https://img.shields.io/github/forks/shinkeonkim/peachpitch">
     <img src = "https://img.shields.io/github/stars/shinkeonkim/peachpitch">
-    <img src = "https://img.shields.io/github/license/shinkeonkim/peachpitch">
     <img src="https://img.shields.io/static/v1?label=python&message=musicplayer" />
     <img src="https://img.shields.io/github/languages/top/shinkeonkim/peachpitch" />
     <img src="https://img.shields.io/github/last-commit/shinkeonkim/peachpitch"/>
